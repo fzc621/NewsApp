@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     ViewPager pager;
     ArrayList<Fragment> fragmentList;
     MyFragmentPagerAdapter fragmentPagerAdapter;
-    boolean isNight = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
