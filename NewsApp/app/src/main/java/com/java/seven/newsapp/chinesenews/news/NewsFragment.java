@@ -1,7 +1,6 @@
 package com.java.seven.newsapp.chinesenews.news;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,7 @@ import android.view.ViewGroup;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
 import com.java.seven.newsapp.bean.LatestNews;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -41,7 +38,8 @@ public class NewsFragment extends Fragment implements NewsContract.View {
         recyclerView = (RecyclerView) view.findViewById(R.id.latest_news_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        presenter.getLatestNews();
+        int[] category = {1};
+        presenter.getLatestNews(20, category);
 
         return view;
     }
