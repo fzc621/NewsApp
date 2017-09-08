@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.java.seven.newsapp.api.NewsApi;
 import com.java.seven.newsapp.bean.LatestNews;
-import com.java.seven.newsapp.bean.SearchNews;
 
 import rx.Subscriber;
 

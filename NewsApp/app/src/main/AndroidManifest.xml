@@ -24,8 +24,6 @@
         <activity
             android:name=".chinesenews.content.ContentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.AddScheduleActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

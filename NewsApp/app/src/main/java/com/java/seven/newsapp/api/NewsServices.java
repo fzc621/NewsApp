@@ -6,7 +6,6 @@ package com.java.seven.newsapp.api;
 
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.bean.News;
-import com.java.seven.newsapp.bean.SearchNews;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

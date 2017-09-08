@@ -1,7 +1,6 @@
 package com.java.seven.newsapp.chinesenews.news;
 
 import com.java.seven.newsapp.bean.LatestNews;
-import com.java.seven.newsapp.bean.SearchNews;
 
 import java.util.List;
 
