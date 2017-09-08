@@ -42,4 +42,9 @@ public class NewsPresenter implements NewsContract.Presenter {
             }
         }, keyword);
     }
+
+    @Override
+    public void getLatestNews(int size, int[] category) {
+
+    }
 }
