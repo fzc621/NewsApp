@@ -8,13 +8,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.MyFragmentPagerAdapter;
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
+import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     ViewPager pager;
     ArrayList<Fragment> fragmentList;
     MyFragmentPagerAdapter fragmentPagerAdapter;
-
+    boolean isNight = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,13 +113,25 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         /*if (id == R.id.action_settings) {
             return true;
         }*/
-
+        switch (item.getItemId()) {
+            case R.id.item_night:
+                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, true);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                recreate();
+                break;
+            case R.id.item_light:
+                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, false);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+                break;
+            default:
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
