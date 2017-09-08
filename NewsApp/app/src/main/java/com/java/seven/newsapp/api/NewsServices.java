@@ -12,8 +12,8 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 public interface NewsServices {
-    @GET("latest?pageNo=1&pageSize=10")
-    Observable<LatestNews> getLatestNews();
+    @GET("latest?pageNo=1")
+    Observable<LatestNews> getLatestNews(@Query("category") int type, @Query("pageSize") int size);
 
     @GET("search")
     Observable<LatestNews> getSearchNews(@Query("keyword") String keyword);

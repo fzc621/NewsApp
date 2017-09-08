@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.RefreshListAdapter;
 import com.java.seven.newsapp.bean.LatestNews;
+
 import com.java.seven.newsapp.widgets.RefreshListView;
 import java.util.List;
 
@@ -36,8 +37,14 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
         /*
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         refreshListView.setLayoutManager(layoutManager);*/
-
-        presenter.getLatestNews();
+        if (categoryCode != 0) {
+            int[] categoryCodes = {categoryCode};
+            presenter.getLatestNews(20, categoryCodes);
+        }
+        else {
+            int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
+            presenter.getLatestNews(20, categoryCodes);
+        }
 
         return view;
     }

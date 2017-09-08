@@ -7,6 +7,7 @@ import javax.crypto.spec.DESedeKeySpec;
  */
 
 public class NewsCategory {
+    public static final int ALL = 0;
     public static final int SCIENCE = 1;
     public static final int EDU = 2;
     public static final int MILITARY = 3;
@@ -20,8 +21,22 @@ public class NewsCategory {
     public static final int HEALTH = 11;
     public static final int ENTERTAINMENT = 12;
 
-    public static int[] getAllCategoryCodes() {
+    public static int[] getCategoryCodesButAll() {
         return new int[] {SCIENCE, EDU, MILITARY, DOMESTIC, SOCIETY, CULTURE,
+                CAR, INTERNATIONAL, SPORTS, ECONOMY, HEALTH, ENTERTAINMENT};
+    }
+
+    public static String[] getAllCategoryNamesButAll() {
+        int[] categoryCodes = getCategoryCodesButAll();
+        String[] categoryNames = new String[categoryCodes.length];
+        for (int i = 0; i < categoryNames.length; ++i) {
+            categoryNames[i] = codeToName(categoryCodes[i]);
+        }
+        return categoryNames;
+    }
+
+    public static int[] getAllCategoryCodes() {
+        return new int[] {ALL, SCIENCE, EDU, MILITARY, DOMESTIC, SOCIETY, CULTURE,
          CAR, INTERNATIONAL, SPORTS, ECONOMY, HEALTH, ENTERTAINMENT};
     }
 
@@ -36,6 +51,7 @@ public class NewsCategory {
 
     public static String codeToName(int code) {
         switch (code) {
+            case ALL:           return "首页";
             case SCIENCE:       return "科技";
             case EDU:           return "教育";
             case MILITARY:      return "军事";
@@ -51,22 +67,5 @@ public class NewsCategory {
             default:            return "";
         }
     }
-    /*
-    public static int nameToCode(String name) {
-        switch (name) {
-            case "科技": return SCIENCE;
-            case "教育": return EDU;
-            case "军事": return MILITARY;
-            case "国内": return DOMESTIC;
-            case "社会": return SOCIETY;
-            case "文化": return CULTURE;
-            case "汽车": return CAR;
-            case "国际": return INTERNATIONAL;
-            case "体育": return SPORTS;
-            case "财经": return ECONOMY;
-            case "健康": return HEALTH;
-            case "娱乐": return ENTERTAINMENT;
-            default:    return -1;
-        }
-    }*/
+
 }

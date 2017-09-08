@@ -17,12 +17,11 @@ public interface NewsContract {
     interface Presenter{
         void getSearchNews(String keyword);
         void getLatestNews(int size, int[] category);
-        void getLatestNews();
     }
 
     interface Model{
         void getSearchNews(CallBackLatestNews callback, String keyword);
-        void getLatestNews(CallBackLatestNews callback);
+        void getLatestNews(CallBackLatestNews callback, int size, int[] category);
     }
 
     interface CallBackLatestNews {
