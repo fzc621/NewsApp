@@ -2,9 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/latest_news_recyclerview"
+    <com.java.seven.newsapp.widgets.RefreshListView
+        android:id="@+id/refresh_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"></com.java.seven.newsapp.widgets.RefreshListView>
 
 </FrameLayout>

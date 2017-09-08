@@ -16,8 +16,8 @@ public interface NewsContract {
 
     interface Presenter{
         void getSearchNews(String keyword);
-//        void getLatestNews(int size, String type);
-    void getLatestNews();
+        void getLatestNews(int size, int[] category);
+        void getLatestNews();
     }
 
     interface Model{
