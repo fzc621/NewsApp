@@ -9,13 +9,16 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.java.seven.newsapp.R;
+import com.java.seven.newsapp.adapter.RefreshListAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class RefreshListView extends ListView implements OnScrollListener {
 
@@ -45,6 +48,18 @@ public class RefreshListView extends ListView implements OnScrollListener {
     private View footerView; //底部的footer   view
     private int footerViewHeight; //底部view的高度
     private boolean isLoadingMore = false; //判断是不是"加载更多"
+    private ListAdapter mAdpater;
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        super.setAdapter(adapter);
+        mAdpater = adapter;
+    }
+
+    @Override
+    public ListAdapter getAdapter() {
+        return mAdpater;
+    }
 
     /**
      * listview的接口，监听listview的下来刷新和上拉加载更多

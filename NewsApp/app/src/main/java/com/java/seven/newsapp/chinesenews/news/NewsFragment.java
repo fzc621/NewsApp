@@ -6,11 +6,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.RefreshListAdapter;
 import com.java.seven.newsapp.bean.LatestNews;
 
 import com.java.seven.newsapp.widgets.RefreshListView;
+
+import java.sql.Ref;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,7 +39,7 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
         refreshListView = (RefreshListView) view.findViewById(R.id.refresh_list);
-
+        refreshListView.setOnRefreshListener(this);
         /*
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         refreshListView.setLayoutManager(layoutManager);*/
@@ -52,8 +58,22 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
     @Override
     public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
-        RefreshListAdapter adapter = new RefreshListAdapter(getContext(), list);
-        refreshListView.setAdapter(adapter);
+        RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
+        if (refreshListAdapter != null) {
+            List<LatestNews.ListBean> oldItems = refreshListAdapter.getItems();
+            List<LatestNews.ListBean> newItems = new ArrayList<>();
+            for (int i = 0; i < list.size(); ++i)
+                newItems.add(list.get(i));
+            for (int i = 0; i < oldItems.size(); ++i)
+                newItems.add(oldItems.get(i));
+            refreshListAdapter.onDateChange(newItems);
+            refreshListView.loadMoreComplete();
+        }
+        else {
+            refreshListAdapter = new RefreshListAdapter(getContext(), list);
+            refreshListView.setAdapter(refreshListAdapter);
+
+        }
     }
 
 
@@ -67,10 +87,14 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
     }
     @Override
     public void onDownPullRefresh() {
-        /*
-        Presenter presenter = new Presenter();
-        presenter.getLatestNews(INC, category);
-         */
+        if (categoryCode != 0) {
+            int[] categoryCodes = {categoryCode};
+            presenter.getLatestNews(INC, categoryCodes);
+        }
+        else {
+            int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
+            presenter.getLatestNews(INC, categoryCodes);
+        }
     }
 
     @Override

@@ -34,6 +34,10 @@ public class RefreshListAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
     }
 
+    public List<LatestNews.ListBean> getItems() {
+        return items;
+    }
+
     @Override
     public int getCount() {
         return items.size();
