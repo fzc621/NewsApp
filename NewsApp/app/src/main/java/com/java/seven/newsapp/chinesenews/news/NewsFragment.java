@@ -1,6 +1,7 @@
 package com.java.seven.newsapp.chinesenews.news;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +68,13 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
             for (int i = 0; i < oldItems.size(); ++i)
                 newItems.add(oldItems.get(i));
             refreshListAdapter.onDateChange(newItems);
-            refreshListView.loadMoreComplete();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshListView.onRefreshComplete();
+                }
+            }, 1000);
         }
         else {
             refreshListAdapter = new RefreshListAdapter(getContext(), list);
