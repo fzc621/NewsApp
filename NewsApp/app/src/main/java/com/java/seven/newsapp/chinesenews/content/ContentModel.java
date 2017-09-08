@@ -2,7 +2,6 @@ package com.java.seven.newsapp.chinesenews.content;
 
 import com.java.seven.newsapp.api.NewsApi;
 import com.java.seven.newsapp.bean.News;
-import com.java.seven.newsapp.bean.StoryExtra;
 
 import rx.Subscriber;
 

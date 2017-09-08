@@ -14,7 +14,6 @@ import android.view.MenuItem;
 
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.MyFragmentPagerAdapter;
-import com.java.seven.newsapp.fragment.ScheduleFragment;
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentList = new ArrayList<>();
         fragmentList.add(new NewsFragment());
-        fragmentList.add(new ScheduleFragment());
+//        fragmentList.add(new ScheduleFragment());
         //fragmentList.add(new TestFragment());
 
         //fragment = (NewsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
@@ -65,9 +64,9 @@ public class MainActivity extends AppCompatActivity
 
         // insert all tabs from pagerAdapter data
         List<String> tabsNames = new ArrayList<>();
-        tabsNames.add("zhihu");
-        tabsNames.add("schedule");
-        tabsNames.add("timeTable");
+        tabsNames.add("News");
+        tabsNames.add("Category");
+//        tabsNames.add("timeTable");
         for (int i = 0; i < fragmentPagerAdapter.getCount(); i++) {
             tabHost.addTab(
                     tabHost.newTab()

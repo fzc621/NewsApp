@@ -2,6 +2,6 @@
     <dbname value="oneday"></dbname>
     <version value="2" />
     <list>
-        <mapping class="com.java.seven.newsapp.bean.Schedule"/>
+        <!--<mapping class="com.java.seven.newsapp.bean.Schedule"/>-->
     </list>
 </litepal>
