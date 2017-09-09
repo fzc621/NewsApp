@@ -11,14 +11,8 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import com.java.seven.newsapp.R;
-import com.java.seven.newsapp.adapter.RefreshListAdapter;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 public class RefreshListView extends ListView implements OnScrollListener {
 
@@ -36,10 +30,9 @@ public class RefreshListView extends ListView implements OnScrollListener {
     private int currentState = DOWN_PULL_REFERESH;//listView当前的状态，默认为”下拉刷新“状态
     private Animation upAnimation; //下拉箭头变为向上箭头的动画
     private Animation downAnimation; //上拉箭头变为向下箭头的动画
-    private ImageView ivArrow; //下拉箭头
-    private ProgressBar mProgressBar; //进度条
-    private TextView tvState; //显示状态的文本
-    private TextView tvLastUpdateTimes; //显示最后更新的时间
+    private Animation rotateAnimation;
+
+    private ImageView refreshIcon; //下拉箭头
 
     /**
      * 底部加载更多部分
@@ -90,27 +83,15 @@ public class RefreshListView extends ListView implements OnScrollListener {
      */
     private void initHeaderView() {
         headerView = View.inflate(getContext(), R.layout.header_layout, null);
-        ivArrow = (ImageView) headerView.findViewById(R.id.pull_to_refresh_icon);
-        mProgressBar = (ProgressBar) headerView.findViewById(R.id.refresh_progressbar);
-        tvState = (TextView) headerView.findViewById(R.id.hint_text);
-        tvLastUpdateTimes = (TextView) headerView.findViewById(R.id.refresh_time);
+        refreshIcon = (ImageView) headerView.findViewById(R.id.pull_to_refresh_icon);
 
-        //最近更新
-        tvLastUpdateTimes.setText("最近更新:" + getLastUpdateTime());
-        //设置（0，0）以便系统测量footerView的宽高
+
+
         headerView.measure(0, 0);
         headerViewHeight = headerView.getMeasuredHeight();
         headerView.setPadding(0, -headerViewHeight, 0, 0);
         this.addHeaderView(headerView);
         initAnimation();
-    }
-
-    /**
-     * 获取最近更新时间
-     */
-    private String getLastUpdateTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-        return sdf.format(System.currentTimeMillis());
     }
 
     /**
@@ -124,6 +105,11 @@ public class RefreshListView extends ListView implements OnScrollListener {
         downAnimation = new RotateAnimation(-180f, -360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         downAnimation.setDuration(500);
         downAnimation.setFillAfter(true);//设为true,表示动画完成后，保持动画后的状态
+
+        rotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(1000);
+        rotateAnimation.setFillAfter(true);//设为true,表示动画完成后，保持动画后的状态
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
 
     }
 
@@ -199,24 +185,12 @@ public class RefreshListView extends ListView implements OnScrollListener {
      */
     private void refreshHeaderView() {
         switch (currentState) {
-            case DOWN_PULL_REFERESH:
-                tvState.setText("下拉刷新");
-                ivArrow.startAnimation(downAnimation);
+            case DOWN_PULL_REFERESH: break;
+            case RELEASE_REFRESH: break;
+            case REFRESHING: refreshIcon.startAnimation(rotateAnimation);
                 break;
-            case RELEASE_REFRESH:
-                tvState.setText("放开刷新");
-                ivArrow.startAnimation(upAnimation);
-                break;
-            case REFRESHING:
-                ivArrow.clearAnimation();
-                ivArrow.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
-                tvState.setText("正在刷新...");
-                break;
-            default:
-                break;
+            default: break;
         }
-
     }
 
     /**
@@ -271,10 +245,8 @@ public class RefreshListView extends ListView implements OnScrollListener {
      */
     public void onRefreshComplete() {
         headerView.setPadding(0, -headerViewHeight, 0, 0);
-        ivArrow.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
-        tvState.setText("下拉刷新");
-        tvLastUpdateTimes.setText("最近更新时间:" + getLastUpdateTime());
+        rotateAnimation.cancel();
+        rotateAnimation.reset();
         currentState = DOWN_PULL_REFERESH;
     }
 

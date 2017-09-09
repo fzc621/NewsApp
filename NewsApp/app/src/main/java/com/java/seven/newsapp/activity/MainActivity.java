@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.FixedPagerAdapter;
 import com.java.seven.newsapp.chinesenews.news.NewsCategory;
@@ -40,13 +38,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("hashcode: " + this.hashCode());
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         tab_layout = (TabLayout) this.findViewById(R.id.tab_layout);
         pager = (ViewPager) this.findViewById(R.id.viewpager);
-
         fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
         fragments = new ArrayList<>();
         for (int i = 0; i < categoryCodes.length; ++i) {
