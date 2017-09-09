@@ -24,7 +24,7 @@ public class NewsModel implements NewsContract.Model {
     public NewsModel() { newsList = new ArrayList<>(1000); }
 
     @Override
-    public void getLatestNews(final NewsContract.CallBackLatestNews callback, int size, int[] category) {
+    public void getLatestNews(final NewsContract.CallBackLatestNews callback, int size, final int[] category) {
         final int size_ = Math.min(size, MAX_SIZE);
         Subscriber subscriber = new Subscriber<LatestNews>() {
 
