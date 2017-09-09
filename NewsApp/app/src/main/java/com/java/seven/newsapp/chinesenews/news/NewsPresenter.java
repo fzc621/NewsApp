@@ -22,14 +22,15 @@ public class NewsPresenter implements NewsContract.Presenter {
     }
 
     @Override
-    public void getLatestNews() {
+    public void getLatestNews(int size, int[] category) {
         Log.d(TAG, "getLatestNews");
         model.getLatestNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
                 view.refreshRecyclerVew(list);
             }
-        });
+        },
+        size, category);
     }
 
     @Override
