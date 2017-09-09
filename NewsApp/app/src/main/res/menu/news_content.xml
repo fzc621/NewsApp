@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/item_favorite"
+        android:icon="@drawable/favorites"
+        android:title="Item"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/item_share"
         android:icon="@drawable/ic_menu_share"
         android:title="Item"
