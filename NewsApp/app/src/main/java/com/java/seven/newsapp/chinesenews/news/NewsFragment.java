@@ -1,28 +1,33 @@
 package com.java.seven.newsapp.chinesenews.news;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import com.java.seven.newsapp.R;
-import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
+import com.java.seven.newsapp.adapter.RefreshListAdapter;
 import com.java.seven.newsapp.bean.LatestNews;
 
+import com.java.seven.newsapp.widgets.RefreshListView;
+
+import java.sql.Ref;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by zzy on 17-9-8.
  */
 
-public class NewsFragment extends Fragment implements NewsContract.View {
+public class NewsFragment extends Fragment implements NewsContract.View, RefreshListView.OnRefreshListener {
 
     private static final String TAG = "NewsFragment";
-    RecyclerView recyclerView;
+    RefreshListView refreshListView;
     private NewsContract.Presenter presenter;
 
     public NewsFragment() {
@@ -32,14 +37,21 @@ public class NewsFragment extends Fragment implements NewsContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.latest_news_recyclerview);
+        refreshListView = (RefreshListView) view.findViewById(R.id.refresh_list);
+        refreshListView.setOnRefreshListener(this);
+        /*
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        int[] category = {1};
-        presenter.getLatestNews(20, category);
+        refreshListView.setLayoutManager(layoutManager);*/
+        if (categoryCode != 0) {
+            int[] categoryCodes = {categoryCode};
+            presenter.getLatestNews(20, categoryCodes);
+        }
+        else {
+            int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
+            presenter.getLatestNews(20, categoryCodes);
+        }
 
         return view;
     }
@@ -47,8 +59,53 @@ public class NewsFragment extends Fragment implements NewsContract.View {
     @Override
     public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
-        NewsSummaryAdapter adapter = new NewsSummaryAdapter(list);
-        recyclerView.setAdapter(adapter);
+        RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
+        if (refreshListAdapter != null) {
+            List<LatestNews.ListBean> oldItems = refreshListAdapter.getItems();
+            List<LatestNews.ListBean> newItems = new ArrayList<>();
+            for (int i = 0; i < list.size(); ++i)
+                newItems.add(list.get(i));
+            for (int i = 0; i < oldItems.size(); ++i)
+                newItems.add(oldItems.get(i));
+            refreshListAdapter.onDateChange(newItems);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshListView.onRefreshComplete();
+                }
+            }, 1000);
+        }
+        else {
+            refreshListAdapter = new RefreshListAdapter(getContext(), list);
+            refreshListView.setAdapter(refreshListAdapter);
+
+        }
     }
 
+
+    private final int INC = 5;
+    private int categoryCode;
+    public void setCategoryCode(int categoryCode) {
+        this.categoryCode = categoryCode;
+    }
+    public int getCategoryCode() {
+        return categoryCode;
+    }
+    @Override
+    public void onDownPullRefresh() {
+        if (categoryCode != 0) {
+            int[] categoryCodes = {categoryCode};
+            presenter.getLatestNews(INC, categoryCodes);
+        }
+        else {
+            int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
+            presenter.getLatestNews(INC, categoryCodes);
+        }
+    }
+
+    @Override
+    public void onLoadingMore() {
+        // important
+    }
 }

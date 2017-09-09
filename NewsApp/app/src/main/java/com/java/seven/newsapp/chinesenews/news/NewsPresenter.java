@@ -43,4 +43,5 @@ public class NewsPresenter implements NewsContract.Presenter {
             }
         }, keyword);
     }
+
 }
