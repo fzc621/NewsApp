@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -82,8 +83,21 @@ public class RefreshListAdapter extends BaseAdapter {
 
         LatestNews.ListBean storiesBean = items.get(position);
         viewHolderRef.newsText.setText(storiesBean.getNews_Title());
-        Glide.with(context).load(storiesBean.getNews_Pictures()).into(viewHolderRef.newsImage);
-
+        String[] urls = storiesBean.getNews_Pictures().trim().split(" ");
+        for (int i = 0; i < 3; ++i) {
+            if (urls.length > i) {
+                String url = urls[i];
+                LinearLayout imageContainer = viewHolderRef.imageContainer;
+                View currentImageView = imageContainer.getChildAt(i);
+                if (currentImageView == null) {
+                    imageContainer.addView(new ImageView(imageContainer.getContext()));
+                    currentImageView = imageContainer.getChildAt(i);
+                }
+                Glide.with(context)
+                        .load(urls[i])
+                        .into((ImageView)currentImageView);
+            }
+        }
         return convertView;
     }
 
@@ -102,11 +116,13 @@ public class RefreshListAdapter extends BaseAdapter {
         CardView cardView;
         ImageView newsImage;
         TextView newsText;
+        LinearLayout imageContainer;
 
         public ViewHolder(View itemView) {
             cardView = itemView.findViewById(R.id.latest_news_cardview);
             newsImage = itemView.findViewById(R.id.latest_news_image);
             newsText = itemView.findViewById(R.id.latest_news_title);
+            imageContainer = itemView.findViewById(R.id.image_container);
         }
     }
 
