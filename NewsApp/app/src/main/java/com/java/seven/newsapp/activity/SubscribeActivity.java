@@ -45,13 +45,13 @@ public class SubscribeActivity extends Activity {
         toolbar.setTitleTextColor(0xFFFFFFFF);
 
         Intent intent = getIntent();
-        boolean[] subscribeState = intent.getBooleanArrayExtra(KEY);
+        boolean[] subscribeStates = intent.getBooleanArrayExtra(KEY);
         for (int i = 1; i <= NewsCategory.CATEGORY_CNT; ++i) {
             View categoryItem = findViewById(NewsCategory.codeToId(i));
             TextView tv = categoryItem.findViewById(R.id.category_name);
             CheckBox cb = categoryItem.findViewById(R.id.checkBox);
             tv.setText(NewsCategory.codeToName(i));
-            cb.setChecked(subscribeState[i]);
+            cb.setChecked(subscribeStates[i]);
         }
     }
 
@@ -68,14 +68,14 @@ public class SubscribeActivity extends Activity {
     }
 
     private boolean[] getSubscribeState() {
-        boolean[] subscribeState = new boolean[NewsCategory.CATEGORY_CNT + 1];
-        subscribeState[0] = true;
+        boolean[] subscribeStates = new boolean[NewsCategory.CATEGORY_CNT + 1];
+        subscribeStates[0] = true;
         for (int i = 1; i <= NewsCategory.CATEGORY_CNT; ++i) {
             View categoryItem = findViewById(NewsCategory.codeToId(i));
             CheckBox cb = categoryItem.findViewById(R.id.checkBox);
-            subscribeState[i] = cb.isChecked();
+            subscribeStates[i] = cb.isChecked();
         }
-        return subscribeState;
+        return subscribeStates;
     }
 
 }
