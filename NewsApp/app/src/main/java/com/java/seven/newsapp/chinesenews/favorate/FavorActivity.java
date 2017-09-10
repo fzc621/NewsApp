@@ -15,6 +15,7 @@ import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.widgets.RefreshListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FavorActivity extends AppCompatActivity implements FavorContract.View, RefreshListView.OnRefreshListener{
@@ -40,7 +41,7 @@ public class FavorActivity extends AppCompatActivity implements FavorContract.Vi
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
         if (refreshListAdapter != null) {
-            refreshListAdapter.onDateChange(list);
+            refreshListAdapter.onDataChangeForFavor(list);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
