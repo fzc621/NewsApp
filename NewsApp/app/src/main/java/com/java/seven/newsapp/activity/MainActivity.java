@@ -22,6 +22,8 @@ import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppConstants;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
 
+import junit.framework.Test;
+
 import org.jsoup.select.Evaluator;
 
 import java.util.ArrayList;
@@ -42,9 +44,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("hashcode: " + this.hashCode());
         setContentView(R.layout.activity_main);
-
+        System.out.println("onCreate");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

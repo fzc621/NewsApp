@@ -2,9 +2,25 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SubscribeActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp"
+        android:titleTextColor="@color/mdtp_white"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -14,20 +30,21 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="8dp"
-        android:divider="@drawable/divider_line"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
-        android:showDividers="middle|beginning|end"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="45dp"
             android:divider="@drawable/divider_line"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category1"
@@ -36,19 +53,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category2"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <include layout="@layout/vertical_line" />
         </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="45dp"
+            android:divider="@drawable/divider_line"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category3"
@@ -57,19 +82,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category4"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <include layout="@layout/vertical_line" />
         </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="45dp"
+            android:divider="@drawable/divider_line"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category5"
@@ -78,19 +111,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category6"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <include layout="@layout/vertical_line" />
         </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="45dp"
+            android:divider="@drawable/divider_line"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category7"
@@ -99,19 +140,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category8"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <include layout="@layout/vertical_line" />
         </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="45dp"
+            android:divider="@drawable/divider_line"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category9"
@@ -120,19 +169,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category10"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
+            <include layout="@layout/vertical_line" />
         </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="45dp"
+            android:divider="@drawable/divider_line"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <include layout="@layout/vertical_line" />
 
             <include
                 android:id="@+id/category11"
@@ -141,14 +198,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+            <include layout="@layout/vertical_line" />
+
             <include
                 android:id="@+id/category12"
                 layout="@layout/subscribe_item_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-        </LinearLayout>
 
+            <include layout="@layout/vertical_line" />
+        </LinearLayout>
+        <include layout="@layout/horizontal_line"/>
     </LinearLayout>
 
     <Button
