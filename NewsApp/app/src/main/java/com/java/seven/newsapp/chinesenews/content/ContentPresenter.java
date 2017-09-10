@@ -24,6 +24,7 @@ public class ContentPresenter implements ContentContract.Presenter {
                 view.setContent(news.getNews_Content());
                 view.setTitleImage(news.getNews_Pictures());
                 view.setTitle(news.getNews_Title());
+                view.setUrl(news.getNews_URL());
             }
         }, id);
     }
