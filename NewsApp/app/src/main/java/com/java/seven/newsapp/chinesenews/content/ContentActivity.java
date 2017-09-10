@@ -56,6 +56,9 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
         presenter = new ContentPresenter(this);
 
+        // 获取语音合成对象实例
+        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        
         final Intent intent = getIntent();
         id = intent.getStringExtra(NewsSummaryAdapter.NEWS_ID);
 
@@ -135,8 +138,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     }
 
     private void startTTS() {
-        // 获取语音合成对象实例
-        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+
         // 设置context
         mSpeechSynthesizer.setContext(this);
         // 设置语音合成状态监听器
