@@ -40,10 +40,7 @@ public class FavorActivity extends AppCompatActivity implements FavorContract.Vi
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
         if (refreshListAdapter != null) {
-            List<LatestNews.ListBean> newItems = new ArrayList<>();
-            for (int i = 0; i < list.size(); ++i)
-                newItems.add(list.get(i));
-            refreshListAdapter.onDateChange(newItems);
+            refreshListAdapter.onDateChange(list);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -55,7 +52,6 @@ public class FavorActivity extends AppCompatActivity implements FavorContract.Vi
         else {
             refreshListAdapter = new RefreshListAdapter(this, list);
             refreshListView.setAdapter(refreshListAdapter);
-
         }
     }
 

@@ -110,7 +110,10 @@ public class NewsApi {
             public LatestNews.ListBean call(News news) {
                 return new LatestNews.ListBean().setNews_ID(news.getNews_ID())
                         .setNews_Pictures(news.getNews_Pictures())
-                        .setNews_Title(news.getNews_Title());
+                        .setNews_Title(news.getNews_Title())
+                        .setNews_Author(news.getNews_Author())
+                        .setNews_Intro(news.getNews_Content().substring(0, 20))
+                        .setNews_Time(news.getNews_Time());
             }
         });
         merrge.subscribe(subscriber);
