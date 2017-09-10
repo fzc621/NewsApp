@@ -11,7 +11,7 @@ import java.util.List;
 public interface FavorContract {
 
     interface  View{
-        void refreshRecyclerVew(List<LatestNews.ListBean> storiesList);
+        void refreshRecyclerVew(List<LatestNews.ListBean> list);
     }
 
     interface Presenter{
@@ -19,7 +19,7 @@ public interface FavorContract {
     }
 
     interface Model{
-        void getFavor();
+        void getFavor(CallBackFavor callback);
     }
 
     interface CallBackFavor {

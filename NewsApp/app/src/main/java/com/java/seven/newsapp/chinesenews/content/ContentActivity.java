@@ -26,6 +26,10 @@ import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
 import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.HtmlFormat;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -120,8 +124,15 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         }*/
         switch (item.getItemId()) {
             case R.id.item_favorite:
-                new FavorNews().setNewsId(this.id).save();
-                Toast.makeText(this, "favorite被选择了", Toast.LENGTH_SHORT).show();
+                List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+                if (list.size() == 0) {
+                    new FavorNews().setNewsId(this.id).save();
+                    Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    DataSupport.deleteAll(FavorNews.class, "news_id = ?", this.id);
+                    Toast.makeText(this, "unfavorite", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.item_share:
                 Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();
