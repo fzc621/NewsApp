@@ -2,6 +2,7 @@ package com.java.seven.newsapp.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -15,7 +16,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.java.seven.newsapp.R;
-import com.java.seven.newsapp.adapter.MyFragmentPagerAdapter;
+import com.java.seven.newsapp.adapter.FixedPagerAdapter;
+import com.java.seven.newsapp.chinesenews.news.NewsCategory;
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppConstants;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
@@ -23,20 +25,17 @@ import com.java.seven.newsapp.util.SharedPreferencesUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
-import it.neokree.materialtabs.MaterialTabListener;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MaterialTabListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    //public static final String ZHIHUURL = "http://news-at.zhihu.com/";
     private static final String TAG = "MainActivity";
-    private NewsFragment fragment = null;
-    MaterialTabHost tabHost;
-    ViewPager pager;
-    ArrayList<Fragment> fragmentList;
-    MyFragmentPagerAdapter fragmentPagerAdapter;
+
+    private TabLayout tab_layout;
+    private int[] categoryCodes = NewsCategory.getAllCategoryCodes();
+    private String[] categoryNames = NewsCategory.getAllCategoryNames();
+    private List<Fragment> fragments;
+    private FixedPagerAdapter fixedPagerAdapter;
+    private ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,39 +44,21 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentList = new ArrayList<>();
-        fragmentList.add(new NewsFragment());
-//        fragmentList.add(new ScheduleFragment());
-        //fragmentList.add(new TestFragment());
-
-        //fragment = (NewsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
-
-        tabHost = (MaterialTabHost) this.findViewById(R.id.materialTabHost);
+        tab_layout = (TabLayout) this.findViewById(R.id.tab_layout);
         pager = (ViewPager) this.findViewById(R.id.viewpager);
 
-        // init view pager
-        fragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        pager.setAdapter(fragmentPagerAdapter);
-        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // when user do a swipe the selected tab change
-                tabHost.setSelectedNavigationItem(position);
-            }
-        });
-
-        // insert all tabs from pagerAdapter data
-        List<String> tabsNames = new ArrayList<>();
-        tabsNames.add("News");
-        tabsNames.add("Category");
-//        tabsNames.add("timeTable");
-        for (int i = 0; i < fragmentPagerAdapter.getCount(); i++) {
-            tabHost.addTab(
-                    tabHost.newTab()
-                            .setText(tabsNames.get(i))
-                            .setTabListener(this)
-            );
+        fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
+        fragments = new ArrayList<>();
+        for (int i = 0; i < categoryCodes.length; ++i) {
+            NewsFragment newsFragment = new NewsFragment();
+            newsFragment.setCategoryCode(categoryCodes[i]);
+            fragments.add(newsFragment);
         }
+        fixedPagerAdapter.setFragments(fragments);
+        pager.setAdapter(fixedPagerAdapter);
+        tab_layout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tab_layout.setupWithViewPager(pager);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -160,18 +141,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onTabSelected(MaterialTab tab) {
-        pager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabReselected(MaterialTab tab) {
-
-    }
-
-    @Override
-    public void onTabUnselected(MaterialTab tab) {
-
-    }
 }
