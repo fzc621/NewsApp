@@ -10,30 +10,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="4dp">
-
-            <ImageView
-                android:id="@+id/latest_news_image"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter" />
-
-        </android.support.v7.widget.CardView>
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/latest_news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:layout_margin="6dp"
-            android:text="test for this app"/>
+            android:text="test for this app"
+            android:textSize="16sp" />
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/image_container"></LinearLayout>
+
+            <ImageView
+                android:id="@+id/latest_news_image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="fitCenter" />
+
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
