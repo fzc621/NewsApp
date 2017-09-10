@@ -72,19 +72,34 @@ public class NewsCategory {
 
     public static int codeToId(int code) {
         switch (code) {
-            case SCIENCE:       return R.id.category1;
-            case EDU:           return R.id.category2;
-            case MILITARY:      return R.id.category3;
-            case DOMESTIC:      return R.id.category4;
-            case SOCIETY:       return R.id.category5;
-            case CULTURE:       return R.id.category6;
-            case CAR:           return R.id.category7;
-            case INTERNATIONAL: return R.id.category8;
-            case SPORTS:        return R.id.category9;
-            case ECONOMY:       return R.id.category10;
-            case HEALTH:        return R.id.category11;
-            case ENTERTAINMENT: return R.id.category12;
-            default:            return -1;
+            case SCIENCE:
+                return R.id.category1;
+            case EDU:
+                return R.id.category2;
+            case MILITARY:
+                return R.id.category3;
+            case DOMESTIC:
+                return R.id.category4;
+            case SOCIETY:
+                return R.id.category5;
+            case CULTURE:
+                return R.id.category6;
+            case CAR:
+                return R.id.category7;
+            case INTERNATIONAL:
+                return R.id.category8;
+            case SPORTS:
+                return R.id.category9;
+            case ECONOMY:
+                return R.id.category10;
+            case HEALTH:
+                return R.id.category11;
+            case ENTERTAINMENT:
+                return R.id.category12;
+            default:
+                return -1;
+        }
+    }
 
     public static int nameToCode(String name) {
         switch (name) {
