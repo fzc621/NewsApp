@@ -39,7 +39,7 @@
             android:name=".chinesenews.content.ContentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:label="@string/app_name"
+            android:label="@string/settings_subscribe"
             android:name=".activity.SubscribeActivity"/>
 
         <!-- ShareSDK的activity -->

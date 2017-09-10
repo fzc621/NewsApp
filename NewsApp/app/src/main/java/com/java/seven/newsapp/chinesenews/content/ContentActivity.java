@@ -23,7 +23,8 @@ import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
-import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
+import com.java.seven.newsapp.adapter.RefreshListAdapter;
+import com.java.seven.newsapp.util.HtmlFormat;
 import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.HtmlFormat;
 
@@ -67,7 +68,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         mSpeechSynthesizer = SpeechSynthesizer.getInstance();
         
         final Intent intent = getIntent();
-        id = intent.getStringExtra(NewsSummaryAdapter.NEWS_ID);
+        id = intent.getStringExtra(RefreshListAdapter.NEWS_ID);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
