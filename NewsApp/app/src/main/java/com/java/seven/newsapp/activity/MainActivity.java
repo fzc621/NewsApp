@@ -121,11 +121,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.item_night:
                 SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, true);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                removeFragmentFromActivity();
                 recreate();
                 break;
             case R.id.item_light:
                 SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, false);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                removeFragmentFromActivity();
                 recreate();
                 break;
             default:
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,4 +190,16 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    public void removeFragmentFromActivity(){
+        if(fragments == null)
+            return;
+
+        for (Fragment fr: fragments) {
+            if(fr != null)
+                getSupportFragmentManager().beginTransaction().remove(fr).commit();
+        }
+
+    }
+
 }

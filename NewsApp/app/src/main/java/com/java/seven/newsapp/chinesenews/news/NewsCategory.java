@@ -85,6 +85,24 @@ public class NewsCategory {
             case HEALTH:        return R.id.category11;
             case ENTERTAINMENT: return R.id.category12;
             default:            return -1;
+
+    public static int nameToCode(String name) {
+        switch (name) {
+            case "首页":           return ALL;
+            case "科技":           return SCIENCE;
+            case "教育":           return EDU;
+            case "军事":           return MILITARY;
+            case "国内":           return DOMESTIC;
+            case "社会":           return SOCIETY;
+            case "文化":           return CULTURE;
+            case "汽车":           return CAR;
+            case "国际":           return INTERNATIONAL;
+            case "体育":           return SPORTS;
+            case "财经":           return ECONOMY;
+            case "健康":           return HEALTH;
+            case "娱乐":           return ENTERTAINMENT;
+            default:            return 0;
+
         }
     }
 
