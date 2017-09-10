@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +23,12 @@ import com.baidu.tts.client.TtsMode;
 import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
-import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.HtmlFormat;
-import com.java.seven.newsapp.util.SharedPreferencesUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -122,7 +124,15 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         }*/
         switch (item.getItemId()) {
             case R.id.item_favorite:
-                Toast.makeText(this, "favorite被选择了", Toast.LENGTH_SHORT).show();
+                List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+                if (list.size() == 0) {
+                    new FavorNews().setNewsId(this.id).save();
+                    Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    DataSupport.deleteAll(FavorNews.class, "news_id = ?", this.id);
+                    Toast.makeText(this, "unfavorite", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.item_share:
                 Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();

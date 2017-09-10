@@ -16,6 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.FixedPagerAdapter;
+
+import com.java.seven.newsapp.chinesenews.favorate.FavorActivity;
+import com.java.seven.newsapp.chinesenews.news.NewsCategory;
+
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppConstants;
 import com.java.seven.newsapp.util.SevenDecoder;
@@ -146,6 +150,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_subscribe) {
             onSubscribeClicked();
         } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(MainActivity.this, FavorActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 
