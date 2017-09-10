@@ -14,6 +14,8 @@ public interface ContentContract {
         void setTitle(String title);
 
         void setFabVisible();
+
+        void setUrl(String url);
     }
 
     interface Presenter{

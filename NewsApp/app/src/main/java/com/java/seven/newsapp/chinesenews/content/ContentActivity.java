@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +25,19 @@ import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.RefreshListAdapter;
 import com.java.seven.newsapp.util.HtmlFormat;
+import com.java.seven.newsapp.bean.FavorNews;
+import com.java.seven.newsapp.util.HtmlFormat;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ContentActivity extends AppCompatActivity implements ContentContract.View, SpeechSynthesizerListener {
-
+    private static final String TAG = "ContentActivity";
     @Bind(R.id.toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
     @Bind(R.id.news_image)
@@ -38,6 +46,9 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     WebView newsContent;
     private String id;
     private String text;
+    private String title;
+    private String url;
+    private String imageUrl;
 
     private FloatingActionButton fab;
     private ContentContract.Presenter presenter;
@@ -74,6 +85,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
     @Override
     public void setTitleImage(String url) {
+        this.imageUrl = url;
         Glide.with(this).load(url).into(newsImage);
     }
 
@@ -92,12 +104,18 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
     @Override
     public void setTitle(String title) {
+        this.title = title;
         collapsingToolbarLayout.setTitle(title);
     }
 
     @Override
     public void setFabVisible() {
         fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
@@ -119,9 +137,18 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         }*/
         switch (item.getItemId()) {
             case R.id.item_favorite:
-                Toast.makeText(this, "favorite被选择了", Toast.LENGTH_SHORT).show();
+                List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+                if (list.size() == 0) {
+                    new FavorNews().setNewsId(this.id).save();
+                    Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    DataSupport.deleteAll(FavorNews.class, "news_id = ?", this.id);
+                    Toast.makeText(this, "unfavorite", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.item_share:
+                showShare();
                 Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.item_speak:
@@ -148,7 +175,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
             mSpeechSynthesizer.initTts(TtsMode.MIX);
             mSpeechSynthesizer.speak(text);
         } else {
-            // 授权失败
+            Log.d(TAG, "授权失败");
         }
     }
 
@@ -178,5 +205,30 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     public void onBackPressed() {
         super.onBackPressed();
         mSpeechSynthesizer.stop();
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+//关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+    // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
+        oks.setTitle(title);
+
+        String shareText;
+        if(text.length() < 100)
+            shareText = text;
+        else
+            shareText = text.substring(0,100);
+    // text是分享文本，所有平台都需要这个字段
+        oks.setText(shareText + " " + url);
+        
+        oks.setImageUrl(imageUrl);
+
+    // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+
+// 启动分享GUI
+        oks.show(this);
     }
 }
