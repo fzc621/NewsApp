@@ -19,6 +19,7 @@ import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.chinesenews.content.ContentActivity;
 import com.java.seven.newsapp.util.SevenPreprocessor;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -140,6 +141,15 @@ public class RefreshListAdapter extends BaseAdapter {
      */
     public void onDateChange(List<LatestNews.ListBean> storiesList) {
         items.addAll(0, storiesList);
+        for (int i = 0; i < storiesList.size(); ++i) {
+            views.addFirst(null);
+        }
+        this.notifyDataSetChanged();
+    }
+
+    public void onDataChangeForFavor(List<LatestNews.ListBean> storiesList) {
+        items = new LinkedList<LatestNews.ListBean>(storiesList);
+        views = new LinkedList<>();
         for (int i = 0; i < storiesList.size(); ++i) {
             views.addFirst(null);
         }
