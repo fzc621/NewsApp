@@ -18,15 +18,13 @@ import com.java.seven.newsapp.chinesenews.news.NewsCategory;
  * Created by caibao on 17-9-9.
  */
 
-public class SubscribeActivity extends Activity {
+public class SubscribeActivity extends AppCompatActivity {
     View subscribeButton;
-    Toolbar toolbar;
     public static final int RESULT_CODE = 1;
     public static final String KEY = "subscribeState";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.subscribe_layout);
-
 
         initViewRef();
         initView();
@@ -35,15 +33,11 @@ public class SubscribeActivity extends Activity {
 
     private void initViewRef() {
         subscribeButton = findViewById(R.id.subscribe_button);
-        toolbar = findViewById(R.id.toolbar);
 
 
     }
 
     private void initView() {
-        toolbar.setTitle("SenvenNews");
-        toolbar.setTitleTextColor(0xFFFFFFFF);
-
         Intent intent = getIntent();
         boolean[] subscribeStates = intent.getBooleanArrayExtra(KEY);
         for (int i = 1; i <= NewsCategory.CATEGORY_CNT; ++i) {

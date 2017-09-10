@@ -61,13 +61,7 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
         if (refreshListAdapter != null) {
-            List<LatestNews.ListBean> oldItems = refreshListAdapter.getItems();
-            List<LatestNews.ListBean> newItems = new ArrayList<>();
-            for (int i = 0; i < list.size(); ++i)
-                newItems.add(list.get(i));
-            for (int i = 0; i < oldItems.size(); ++i)
-                newItems.add(oldItems.get(i));
-            refreshListAdapter.onDateChange(newItems);
+            refreshListAdapter.onDateChange(list);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -79,7 +73,6 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
         else {
             refreshListAdapter = new RefreshListAdapter(getContext(), list);
             refreshListView.setAdapter(refreshListAdapter);
-
         }
     }
 

@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity
     public void removeFragmentFromActivity(){
         if(fragments == null)
             return;
-
         for (Fragment fr: fragments) {
             if(fr != null)
                 getSupportFragmentManager().beginTransaction().remove(fr).commit();
