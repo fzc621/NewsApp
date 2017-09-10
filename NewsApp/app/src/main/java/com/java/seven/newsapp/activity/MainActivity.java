@@ -2,7 +2,6 @@ package com.java.seven.newsapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,14 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.FixedPagerAdapter;
+
+import com.java.seven.newsapp.chinesenews.favorate.FavorActivity;
 import com.java.seven.newsapp.chinesenews.news.NewsCategory;
+
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.util.SevenDecoder;
+import com.java.seven.newsapp.util.SevenEncoder;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
-
-import junit.framework.Test;
-
-import org.jsoup.select.Evaluator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     public static final int SUBSCRIBE_ACTIVITY_REQUEST_CODE = 1;
     private static final String TAG = "MainActivity";
 
-    private int[] categoryCodes = NewsCategory.getAllCategoryCodes();
+    private boolean[] subscribeStates;
     private TabLayout tab_layout;
     private List<Fragment> fragments;
     private FixedPagerAdapter fixedPagerAdapter;
@@ -75,12 +75,18 @@ public class MainActivity extends AppCompatActivity
      * it recreates the fragments and pager adapter
      */
     private void initData() {
+        String subscribeStatesStr = SharedPreferencesUtil.getString(this, AppConstants.PREF_KEY_SUBSCRIBE,
+                AppConstants.DEFAULT_SUBSCRIBE_STATE);
+        subscribeStates = SevenDecoder.decodeSubscribeStatesStr(subscribeStatesStr);
+
         fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
         fragments = new ArrayList<>();
-        for (int i = 0; i < categoryCodes.length; ++i) {
-            NewsFragment newsFragment = new NewsFragment();
-            newsFragment.setCategoryCode(categoryCodes[i]);
-            fragments.add(newsFragment);
+        for (int i = 0; i < subscribeStates.length; ++i) {
+            if (subscribeStates[i] == true) {
+                NewsFragment newsFragment = new NewsFragment();
+                newsFragment.setCategoryCode(i);
+                fragments.add(newsFragment);
+            }
         }
         fixedPagerAdapter.setFragments(fragments);
         pager.setAdapter(fixedPagerAdapter);
@@ -142,18 +148,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_subscribe) {
-            Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
-            boolean[] subscribeState = new boolean[NewsCategory.CATEGORY_CNT + 1];
-            for (int i = 0; i < subscribeState.length; ++i) {
-                subscribeState[i] = false;
-            }
-            for (int i = 0; i < categoryCodes.length; ++i) {
-                subscribeState[categoryCodes[i]] = true;
-            }
-            intent.putExtra(SubscribeActivity.KEY, subscribeState);
-            startActivityForResult(intent, SUBSCRIBE_ACTIVITY_REQUEST_CODE);
-
+            onSubscribeClicked();
         } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(MainActivity.this, FavorActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -168,6 +166,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void onSubscribeClicked() {
+        Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
+        intent.putExtra(SubscribeActivity.KEY, subscribeStates);
+        startActivityForResult(intent, SUBSCRIBE_ACTIVITY_REQUEST_CODE);
+    }
+
+    private void onSubscribeResult() {
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -176,16 +184,11 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == SUBSCRIBE_ACTIVITY_REQUEST_CODE &&
                 resultCode == SubscribeActivity.RESULT_CODE) {
             List<Integer> categoryCodesList = new ArrayList<>();
-            boolean[] subscribeState = data.getBooleanArrayExtra(SubscribeActivity.KEY);
-            for (int i = 0; i < subscribeState.length; ++i) {
-                if (subscribeState[i] == true)
-                    categoryCodesList.add(i);
-            }
-            categoryCodes = new int[categoryCodesList.size()];
-            for (int i = 0; i < categoryCodes.length; ++i) {
-                categoryCodes[i] = categoryCodesList.get(i);
-            }
-            initData();
+            subscribeStates = data.getBooleanArrayExtra(SubscribeActivity.KEY);
+            String subscribeStatesStr = SevenEncoder.encodeSubscribeStates(subscribeStates);
+            SharedPreferencesUtil.setString(this, AppConstants.PREF_KEY_SUBSCRIBE, subscribeStatesStr);
+            removeFragmentFromActivity();
+            recreate();
         }
 
     }
