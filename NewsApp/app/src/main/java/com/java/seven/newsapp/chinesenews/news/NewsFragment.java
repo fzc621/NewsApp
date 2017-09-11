@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 
 import com.java.seven.newsapp.R;
+import com.java.seven.newsapp.activity.MainActivity;
 import com.java.seven.newsapp.adapter.RefreshListAdapter;
 import com.java.seven.newsapp.bean.LatestNews;
 
+import com.java.seven.newsapp.util.AppGlobal;
+import com.java.seven.newsapp.util.SevenFilter;
 import com.java.seven.newsapp.widgets.RefreshListView;
 
 import java.sql.Ref;
@@ -24,11 +27,15 @@ import java.util.List;
  * Created by zzy on 17-9-8.
  */
 
-public class NewsFragment extends Fragment implements NewsContract.View, RefreshListView.OnRefreshListener {
+public class NewsFragment extends Fragment
+        implements NewsContract.View, RefreshListView.OnRefreshListener,
+        MainActivity.OnIgnoreKeysChangeListener{
 
     private static final String TAG = "NewsFragment";
+    View fragmentView;
     RefreshListView refreshListView;
     private NewsContract.Presenter presenter;
+    private NewsFragment.OnIgnoreKeysChangeListener onIgnoreKeysChangeListener;
 
     public NewsFragment() {
         presenter = new NewsPresenter(this);
@@ -37,13 +44,13 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
 
-        refreshListView = (RefreshListView) view.findViewById(R.id.refresh_list);
-        refreshListView.setOnRefreshListener(this);
-        /*
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        refreshListView.setLayoutManager(layoutManager);*/
+        fragmentView = inflater.inflate(R.layout.fragment_news, container, false);
+
+        initViewRef();
+        initView();
+        initListener();
+
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
             presenter.getLatestNews(20, categoryCodes);
@@ -53,13 +60,26 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
             presenter.getLatestNews(20, categoryCodes);
         }
 
-        return view;
+        return fragmentView;
+    }
+
+    private void initViewRef() {
+        refreshListView = fragmentView.findViewById(R.id.refresh_list);
+    }
+
+    private void initView() {
+
+    }
+
+    private void initListener() {
+        refreshListView.setOnRefreshListener(this);
     }
 
     @Override
     public void refreshRecyclerView(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
+        list = SevenFilter.filter(list, AppGlobal.ignoreKeys);
         if (refreshListAdapter != null) {
             refreshListAdapter.onDateChange(list);
             Handler handler = new Handler();
@@ -74,6 +94,7 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
             refreshListAdapter = new RefreshListAdapter(getContext(), list);
             refreshListView.setAdapter(refreshListAdapter);
         }
+        onIgnoreKeysChangeListener = refreshListAdapter;
     }
 
 
@@ -100,5 +121,16 @@ public class NewsFragment extends Fragment implements NewsContract.View, Refresh
     @Override
     public void onLoadingMore() {
         // important
+    }
+
+    @Override
+    public void onIgnoreKeysChange(String[] ignoreKeys) {
+        if (onIgnoreKeysChangeListener != null) {
+            onIgnoreKeysChangeListener.onIgnoreKeysChange(ignoreKeys);
+        }
+    }
+
+    public interface OnIgnoreKeysChangeListener {
+        public void onIgnoreKeysChange(String[] ignoreKeys);
     }
 }

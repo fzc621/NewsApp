@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.AsyncLayoutInflater;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Switch;
 
 import com.java.seven.newsapp.R;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private List<Fragment> fragments;
     private FixedPagerAdapter fixedPagerAdapter;
     private ViewPager pager;
+    private List<OnIgnoreKeysChangeListener> onIgnoreKeysChangeListeners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         initViewRef();
         initSetting();
         initData();
+        initListener();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,6 +95,9 @@ public class MainActivity extends AppCompatActivity
         subscribeStates = SevenDecoder.decodeSubscribeStatesStr(subscribeStatesStr);
         AppGlobal.saveDataUsage = SharedPreferencesUtil.getBoolean(this, AppConstants.PREF_KEY_SAVE_DATA_USAGE,
                 AppConstants.DEFAULT_SAVE_DATA_USAGE);
+        String ignoreKeysStr = SharedPreferencesUtil.getString(this, AppConstants.PREF_KEY_IGNORE,
+                AppConstants.DEFAULT_KEY_IGNORE);
+        AppGlobal.ignoreKeys = SevenDecoder.decodeShieldKeyWords(ignoreKeysStr);
     }
 
     private void initData() {
@@ -107,6 +114,13 @@ public class MainActivity extends AppCompatActivity
         pager.setAdapter(fixedPagerAdapter);
         tab_layout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_layout.setupWithViewPager(pager);
+    }
+
+    private void initListener() {
+        onIgnoreKeysChangeListeners = new ArrayList<>();
+        for (int i = 0; i < fragments.size(); ++i) {
+            onIgnoreKeysChangeListeners.add((NewsFragment)(fragments.get(i)));
+        }
     }
 
 
@@ -199,19 +213,36 @@ public class MainActivity extends AppCompatActivity
         // initViewRef
         final Switch saveDataUsageSwitch = dialog.findViewById(R.id.save_data_usage_switch);
         final Switch nightModeSwitch = dialog.findViewById(R.id.night_mode_switch);
+        final EditText ignoreKeysInput = dialog.findViewById(R.id.ignore_keys_input);
 
         // initView
         saveDataUsageSwitch.setChecked(AppGlobal.saveDataUsage);
+        if (AppGlobal.ignoreKeys.length != 0) {
+            ignoreKeysInput.setText(SevenEncoder.encodeShieldKeyWords(AppGlobal.ignoreKeys));
+        }
 
+
+        // set dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Setting");
         builder.setView(dialog);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // data usage
                 boolean saveDataUsage = saveDataUsageSwitch.isChecked();
                 SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.PREF_KEY_SAVE_DATA_USAGE, saveDataUsage);
                 AppGlobal.saveDataUsage = saveDataUsage;
+
+                // ignore
+                String ignoreKeysStr = ignoreKeysInput.getText().toString();
+                String[] ignoreKeys = SevenDecoder.decodeShieldKeyWords(ignoreKeysStr);
+                ignoreKeysStr = SevenEncoder.encodeShieldKeyWords(ignoreKeys);
+                SharedPreferencesUtil.setString(MainActivity.this, AppConstants.PREF_KEY_IGNORE, ignoreKeysStr);
+                AppGlobal.ignoreKeys = ignoreKeys;
+                for (int i = 0; i < onIgnoreKeysChangeListeners.size(); ++i) {
+                    onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
+                }
             }
         });
         builder.setNegativeButton("CANCEL", null);
@@ -242,6 +273,10 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().remove(fr).commit();
         }
 
+    }
+
+    public interface OnIgnoreKeysChangeListener {
+        public void onIgnoreKeysChange(String[] ignoreKeys);
     }
 
 }
