@@ -2,7 +2,9 @@ package com.java.seven.newsapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
+import com.java.seven.newsapp.activity.MainActivity;
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.chinesenews.content.ContentActivity;
 import com.java.seven.newsapp.util.AppGlobal;
@@ -104,16 +107,18 @@ public class RefreshListAdapter extends BaseAdapter {
             }
 
             View view = inflater.inflate(layoutId, parent, false);
-            ViewHolder viewHolder = new ViewHolder(view);
+            final ViewHolder viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     LatestNews.ListBean storiesBean = items.get(position);
                     String id = storiesBean.getNews_ID();
                     Intent intent = new Intent(context, ContentActivity.class);
                     intent.putExtra(NEWS_ID, id);
                     context.startActivity(intent);
+                    setReadColor(view.getContext(), viewHolder);
                 }
             });
 
@@ -131,6 +136,10 @@ public class RefreshListAdapter extends BaseAdapter {
                         .centerCrop()
                         .error(R.drawable.error_404)
                         .into((ImageView)imageContainer.getChildAt(i));
+            }
+
+            if(storiesBean.getRead()) {
+                setReadColor(parent.getContext(), viewHolder);
             }
 
             return view;
@@ -173,5 +182,10 @@ public class RefreshListAdapter extends BaseAdapter {
             imageContainer = itemView.findViewById(R.id.image_container);
             newsFoot = itemView.findViewById(R.id.latest_news_foot);
         }
+    }
+
+    public void setReadColor(Context context, ViewHolder viewHolder){
+        viewHolder.newsTitle.setTextColor(ContextCompat.getColor(context, R.color.readNewsTitle));
+        viewHolder.newsIntro.setTextColor(ContextCompat.getColor(context, R.color.readNewsIntro));
     }
 }

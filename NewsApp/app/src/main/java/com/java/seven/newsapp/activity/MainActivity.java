@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
         fragments = new ArrayList<>();
         for (int i = 0; i < subscribeStates.length; ++i) {
-            if (subscribeStates[i] == true) {
+            if (subscribeStates[i]) {
                 NewsFragment newsFragment = new NewsFragment();
                 newsFragment.setCategoryCode(i);
                 fragments.add(newsFragment);

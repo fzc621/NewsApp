@@ -11,7 +11,7 @@ import java.util.List;
 public interface NewsContract {
 
     interface View{
-        void refreshRecyclerVew(List<LatestNews.ListBean> storiesList);
+        void refreshRecyclerView(List<LatestNews.ListBean> storiesList);
     }
 
     interface Presenter{

@@ -69,7 +69,7 @@ public class SearchActivity extends AppCompatActivity implements NewsContract.Vi
     }
 
     @Override
-    public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
+    public void refreshRecyclerView(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = new RefreshListAdapter(this, list);
         searchListView.setAdapter(refreshListAdapter);
