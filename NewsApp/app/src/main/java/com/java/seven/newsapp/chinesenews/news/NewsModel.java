@@ -11,7 +11,9 @@ import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -28,8 +30,15 @@ public class NewsModel implements NewsContract.Model {
     private static final String TAG = "NewsModel";
     final int MAX_SIZE = 50;
     List<LatestNews.ListBean> newsList;
+    List<LatestNews.ListBean> currentList;
+    Set<String> newsIdSet;
+    int pageNo = 1;
 
-    public NewsModel() { newsList = new ArrayList<>(1000); }
+    public NewsModel() {
+        newsList = new ArrayList<>(1000);
+        currentList = new ArrayList<>();
+        newsIdSet = new HashSet<>();
+    }
 
     @Override
     public void getLatestNews(final NewsContract.CallBackLatestNews callback, int size, final int[] category) {
@@ -58,7 +67,7 @@ public class NewsModel implements NewsContract.Model {
                 }
             };
             newsList = new ArrayList<>(1000);
-            NewsApi.getInstance().getLatestNews(subscriber, size_, category);
+            NewsApi.getInstance().getLatestNews(subscriber, size_, 1, category);
         }
         else {
             List<Integer> array = new ArrayList<>();
@@ -105,46 +114,106 @@ public class NewsModel implements NewsContract.Model {
         }
     }
 
+//    @Override
+//    public void getInitNews(final NewsContract.CallBackLatestNews callback, int size, int[] category) {
+//        final int size_ = Math.min(size, MAX_SIZE);
+//        List<Integer> array = new ArrayList<>();
+//        for (int i : category)
+//            array.add(i);
+//        Observable.from(array).map(new Func1<Integer, List<LatestNews.ListBean>>() {
+//            @Override
+//            public List<LatestNews.ListBean> call(Integer integer) {
+//                List<SimpleNews> list = DataSupport.where("newsClassTag = ?", ""+integer).find(SimpleNews.class);
+//                List<LatestNews.ListBean> newList = new ArrayList<>();
+//                for (SimpleNews n : list)
+//                    newList.add(new LatestNews.ListBean().setNews_ID(n.getNews_ID())
+//                            .setNews_Title(n.getNews_Title())
+//                            .setNews_Pictures(n.getNews_Pictures()));
+//                return newList;
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<List<LatestNews.ListBean>>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        Log.d(TAG, "onCompleted(Not network): ");
+//                        if (newsList.size() > size_)
+//                            newsList = newsList.subList(0, size_);
+//                        callback.result(newsList);
+//                        // update
+//                        for (LatestNews.ListBean bean : newsList)
+//                            newsIdSet.add(bean.getNews_ID());
+//                        newsList.addAll(currentList);
+//                        currentList = newsList;
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.d(TAG, "onError(Not network): ");
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<LatestNews.ListBean> listBeen) {
+//                        Log.d(TAG, "onNext(Not network: ");
+//                        newsList.addAll(listBeen);
+//                    }
+//                });
+//    }
+//
+//
+//    @Override
+//    public void getCurrentNews(NewsContract.CallBackLatestNews callback) {
+//        callback.result(currentList);
+//    }
+
     @Override
-    public void getOldNews(final NewsContract.CallBackLatestNews callback, int size, int[] category) {
+    public void getMoreNews(final NewsContract.CallBackLatestNews callback, final int size, int[] category) {
         final int size_ = Math.min(size, MAX_SIZE);
-        List<Integer> array = new ArrayList<>();
-        for (int i : category)
-            array.add(i);
-        Observable.from(array).map(new Func1<Integer, List<LatestNews.ListBean>>() {
-            @Override
-            public List<LatestNews.ListBean> call(Integer integer) {
-                List<SimpleNews> list = DataSupport.where("newsClassTag = ?", ""+integer).find(SimpleNews.class);
-                List<LatestNews.ListBean> newList = new ArrayList<>();
-                for (SimpleNews n : list)
-                    newList.add(new LatestNews.ListBean().setNews_ID(n.getNews_ID())
-                            .setNews_Title(n.getNews_Title())
-                            .setNews_Pictures(n.getNews_Pictures()));
-                return newList;
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<LatestNews.ListBean>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted(Not network): ");
-                        if (newsList.size() > size_)
-                            callback.result(newsList.subList(0, size_));
-                        else
-                            callback.result(newsList);
-                    }
+        if (TestNetwork.isNetworkAvailable()) {
+            Subscriber subscriber = new Subscriber<LatestNews>() {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG, "onError(Not network): ");
-                    }
+                @Override
+                public void onCompleted() {
 
-                    @Override
-                    public void onNext(List<LatestNews.ListBean> listBeen) {
-                        Log.d(TAG, "onNext(Not network: ");
-                        newsList.addAll(listBeen);
-                    }
-                });
+                    Log.d(TAG, "onCompleted: ");
+                    List<LatestNews.ListBean> chooseList = newsList;
+                    newsList = new ArrayList<>();
+                    for (LatestNews.ListBean bean : chooseList)
+                        if (! newsIdSet.contains(bean.getNews_ID()))
+                            newsList.add(bean);
+                    Collections.shuffle(newsList);
+                    if (newsList.size() > size_)
+                        newsList = newsList.subList(0, size_);
+                    callback.result(newsList);
+                    // update
+                    for (LatestNews.ListBean bean : newsList)
+                        newsIdSet.add(bean.getNews_ID());
+                    newsList.addAll(currentList);
+                    currentList = newsList;
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.d(TAG, "onError: ");
+                }
+
+                @Override
+                public void onNext(LatestNews latestNews) {
+                    Log.d(TAG, "onNext: ");
+//                callback.result(latestNews.getList());
+                    newsList.addAll(latestNews.getList());
+                }
+            };
+            newsList = new ArrayList<>();
+            if (pageNo > size_)
+                NewsApi.getInstance().getLatestNews(subscriber, pageNo, pageNo, category);
+            else
+                NewsApi.getInstance().getLatestNews(subscriber, size_, pageNo, category);
+            if (category.length == 1)
+                pageNo ++;
+        }
+        else
+            callback.result(new ArrayList<LatestNews.ListBean>());
     }
 
     @Override

@@ -16,14 +16,18 @@ public interface NewsContract {
 
     interface Presenter{
         void getSearchNews(String keyword);
+//        void getInitNews(int size, int[] category); // init
+//        void getCurrentNews(); // no change, just for light/night mode etc.
+        void getMoreNews(int size, int[] category); // add more news to current news
         void getLatestNews(int size, int[] category);
-        void getOldNews(int size, int[] category);
     }
 
     interface Model{
         void getSearchNews(CallBackLatestNews callback, String keyword);
         void getLatestNews(CallBackLatestNews callback, int size, int[] category);
-        void getOldNews(CallBackLatestNews callback, int size, int[] category);
+//        void getInitNews(CallBackLatestNews callback, int size, int[] category); // init
+//        void getCurrentNews(CallBackLatestNews callback); // no change, just for light/night mode etc.
+        void getMoreNews(CallBackLatestNews callback, int size, int[] category); // add more news to current news
     }
 
     interface CallBackLatestNews {

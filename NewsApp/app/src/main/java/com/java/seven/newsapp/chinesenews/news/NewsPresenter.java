@@ -32,17 +32,17 @@ public class NewsPresenter implements NewsContract.Presenter {
         },
         size, category);
     }
-
-    @Override
-    public void getOldNews(int size, int[] category) {
-        Log.d(TAG, "getOldNews");
-        model.getOldNews(new NewsContract.CallBackLatestNews() {
-                                @Override
-                                public void result(List<LatestNews.ListBean> list) {
-                                    view.refreshRecyclerVew(list);
-                                }
-        }, size, category);
-    }
+//
+//    @Override
+//    public void getInitNews(int size, int[] category) {
+//        Log.d(TAG, "getInitNews");
+//        model.getInitNews(new NewsContract.CallBackLatestNews() {
+//                                @Override
+//                                public void result(List<LatestNews.ListBean> list) {
+//                                    view.refreshRecyclerVew(list);
+//                                }
+//        }, size, category);
+//    }
 
     @Override
     public void getSearchNews(String keyword) {
@@ -53,6 +53,28 @@ public class NewsPresenter implements NewsContract.Presenter {
                 view.refreshRecyclerVew(list);
             }
         }, keyword);
+    }
+
+//    @Override
+//    public void getCurrentNews() {
+//        Log.d(TAG, "getCurrentNews");
+//        model.getCurrentNews(new NewsContract.CallBackLatestNews() {
+//                                @Override
+//                                public void result(List<LatestNews.ListBean> list) {
+//                                    view.refreshRecyclerVew(list);
+//                                }
+//                            });
+//    }
+
+    @Override
+    public void getMoreNews(int size, int[] category) {
+        Log.d(TAG, "getMoreNews");
+        model.getMoreNews(new NewsContract.CallBackLatestNews() {
+            @Override
+            public void result(List<LatestNews.ListBean> list) {
+                view.refreshRecyclerVew(list);
+            }
+        }, size, category);
     }
 
 }

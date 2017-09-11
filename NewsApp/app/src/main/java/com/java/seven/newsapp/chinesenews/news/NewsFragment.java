@@ -36,6 +36,7 @@ public class NewsFragment extends Fragment
     RefreshListView refreshListView;
     private NewsContract.Presenter presenter;
     private NewsFragment.OnIgnoreKeysChangeListener onIgnoreKeysChangeListener;
+    boolean firstCreate = true;
 
     public NewsFragment() {
         presenter = new NewsPresenter(this);
@@ -53,11 +54,12 @@ public class NewsFragment extends Fragment
 
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
-            presenter.getLatestNews(20, categoryCodes);
-        }
-        else {
+//                presenter.getInitNews(10, categoryCodes);
+            presenter.getMoreNews(5, categoryCodes);
+        } else {
             int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-            presenter.getLatestNews(20, categoryCodes);
+//                presenter.getInitNews(10, categoryCodes);
+            presenter.getMoreNews(5, categoryCodes);
         }
 
         return fragmentView;
@@ -110,11 +112,11 @@ public class NewsFragment extends Fragment
     public void onDownPullRefresh() {
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
-            presenter.getLatestNews(INC, categoryCodes);
+            presenter.getMoreNews(INC, categoryCodes);
         }
         else {
             int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-            presenter.getLatestNews(INC, categoryCodes);
+            presenter.getMoreNews(INC, categoryCodes);
         }
     }
 
