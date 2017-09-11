@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.FixedPagerAdapter;
@@ -152,18 +153,18 @@ public class MainActivity extends AppCompatActivity
             return true;
         }*/
         switch (item.getItemId()) {
-            case R.id.item_night:
-                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, true);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                removeFragmentFromActivity();
-                recreate();
-                break;
-            case R.id.item_light:
-                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, false);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                removeFragmentFromActivity();
-                recreate();
-                break;
+//            case R.id.item_night:
+//                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, true);
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//                removeFragmentFromActivity();
+//                recreate();
+//                break;
+//            case R.id.item_light:
+//                SharedPreferencesUtil.setBoolean(this, AppConstants.ISNIGHT, false);
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                removeFragmentFromActivity();
+//                recreate();
+//                break;
             case R.id.item_search:
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
@@ -221,6 +222,7 @@ public class MainActivity extends AppCompatActivity
             ignoreKeysInput.setText(SevenEncoder.encodeShieldKeyWords(AppGlobal.ignoreKeys));
         }
 
+        nightModeSwitch.setChecked(SharedPreferencesUtil.getBoolean(MainActivity.this, AppConstants.ISNIGHT, false));
 
         // set dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -233,7 +235,21 @@ public class MainActivity extends AppCompatActivity
                 boolean saveDataUsage = saveDataUsageSwitch.isChecked();
                 SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.PREF_KEY_SAVE_DATA_USAGE, saveDataUsage);
                 AppGlobal.saveDataUsage = saveDataUsage;
-
+                // night mode
+                boolean isNight = SharedPreferencesUtil.getBoolean(MainActivity.this, AppConstants.ISNIGHT, false);
+                final boolean setNight = nightModeSwitch.isChecked();
+                SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.ISNIGHT, setNight);
+                AppCompatDelegate.setDefaultNightMode(setNight?AppCompatDelegate.MODE_NIGHT_YES:AppCompatDelegate.MODE_NIGHT_NO);
+                removeFragmentFromActivity();
+                if(isNight != setNight) {
+                    MainActivity.this.runOnUiThread(new Runnable()
+                    {
+                        public void run()
+                        {
+                            recreate();
+                        }
+                    });
+                }
                 // ignore
                 String ignoreKeysStr = ignoreKeysInput.getText().toString();
                 String[] ignoreKeys = SevenDecoder.decodeShieldKeyWords(ignoreKeysStr);
