@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity
                 removeFragmentFromActivity();
                 recreate();
                 break;
+            case R.id.item_search:
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -152,7 +156,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(MainActivity.this, FavorActivity.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_slideshow) {
 
         }  else if (id == R.id.nav_share) {

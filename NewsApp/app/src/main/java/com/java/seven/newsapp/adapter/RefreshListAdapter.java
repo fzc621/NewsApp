@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class RefreshListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
+        Log.d("RefreshListView.getView", String.valueOf(position));
         if (views.get(position) != null) {
             return views.get(position);
         }

@@ -35,12 +35,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".chinesenews.content.ContentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:label="@string/settings_subscribe"
             android:name=".activity.SubscribeActivity"/>
+
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- ShareSDK的activity -->
         <activity

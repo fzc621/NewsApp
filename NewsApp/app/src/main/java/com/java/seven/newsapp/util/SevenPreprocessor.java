@@ -25,6 +25,8 @@ public class SevenPreprocessor {
     }
 
     public static String preprocessTime(String raw) {
+        if (raw.length() != 14)
+            return "";
         String m = raw.substring(4, 6);
         String d = raw.substring(6, 8);
         return m + "-" + d;
