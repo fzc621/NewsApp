@@ -72,7 +72,7 @@ public class SearchActivity extends AppCompatActivity
     }
 
     @Override
-    public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
+    public void refreshRecyclerView(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
         list = SevenFilter.filter(list, AppGlobal.ignoreKeys);
 

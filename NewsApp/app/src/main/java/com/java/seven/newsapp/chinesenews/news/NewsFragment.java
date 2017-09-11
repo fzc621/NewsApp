@@ -76,7 +76,7 @@ public class NewsFragment extends Fragment
     }
 
     @Override
-    public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
+    public void refreshRecyclerView(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
         RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
         list = SevenFilter.filter(list, AppGlobal.ignoreKeys);

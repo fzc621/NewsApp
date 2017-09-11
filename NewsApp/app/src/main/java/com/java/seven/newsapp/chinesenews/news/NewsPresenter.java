@@ -27,7 +27,7 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getLatestNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
-                view.refreshRecyclerVew(list);
+                view.refreshRecyclerView(list);
             }
         },
         size, category);
@@ -39,7 +39,7 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getOldNews(new NewsContract.CallBackLatestNews() {
                                 @Override
                                 public void result(List<LatestNews.ListBean> list) {
-                                    view.refreshRecyclerVew(list);
+                                    view.refreshRecyclerView(list);
                                 }
         }, size, category);
     }
@@ -50,7 +50,7 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getSearchNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
-                view.refreshRecyclerVew(list);
+                view.refreshRecyclerView(list);
             }
         }, keyword);
     }
