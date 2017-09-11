@@ -1,13 +1,16 @@
 package com.java.seven.newsapp.chinesenews.news;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.activity.MainActivity;
@@ -35,8 +38,15 @@ public class NewsFragment extends Fragment
     private static final String TAG = "NewsFragment";
     View fragmentView;
     RefreshListView refreshListView;
+    RefreshListAdapter refreshListAdapter;
     private NewsContract.Presenter presenter;
     private NewsFragment.OnIgnoreKeysChangeListener onIgnoreKeysChangeListener;
+
+    public void onContextUpdated(Context context) {
+        if (refreshListAdapter != null) {
+            refreshListAdapter.onContextUpdated(context);
+        }
+    }
 
     public NewsFragment() {
         presenter = new NewsPresenter(this);
@@ -52,26 +62,31 @@ public class NewsFragment extends Fragment
         initView();
         initListener();
 
-        if (categoryCode != 0) {
-            int[] categoryCodes = {categoryCode};
-            try {
-                presenter.getInitNews(10, categoryCodes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+        if (refreshListAdapter == null) {
+            if (categoryCode != 0) {
+                int[] categoryCodes = {categoryCode};
+                try {
+                    presenter.getInitNews(10, categoryCodes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                presenter.getMoreNews(10, categoryCodes);
+            } else {
+                int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
+                try {
+                    presenter.getInitNews(10, categoryCodes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                presenter.getMoreNews(10, categoryCodes);
             }
-//            presenter.getMoreNews(5, categoryCodes);
-        } else {
-            int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-            try {
-                presenter.getInitNews(10, categoryCodes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-//            presenter.getMoreNews(5, categoryCodes);
+        }
+        else {
+            refreshListView.setAdapter(refreshListAdapter);
         }
 
         return fragmentView;
@@ -92,10 +107,11 @@ public class NewsFragment extends Fragment
     @Override
     public void refreshRecyclerView(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
-        RefreshListAdapter refreshListAdapter = (RefreshListAdapter)refreshListView.getAdapter();
+
+        RefreshListAdapter refreshListAdapter_ = (RefreshListAdapter)refreshListView.getAdapter();
         list = SevenFilter.filter(list, AppGlobal.ignoreKeys);
-        if (refreshListAdapter != null) {
-            refreshListAdapter.onDateChange(list);
+        if (refreshListAdapter_ != null) {
+            refreshListAdapter_.onDateChange(list);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -105,8 +121,15 @@ public class NewsFragment extends Fragment
             }, 1000);
         }
         else {
-            refreshListAdapter = new RefreshListAdapter(getContext(), list);
-            refreshListView.setAdapter(refreshListAdapter);
+            if (refreshListAdapter == null) {
+                refreshListAdapter = new RefreshListAdapter(getContext(), list);
+                refreshListView.setAdapter(refreshListAdapter);
+            }
+            else {
+                refreshListView.setAdapter(refreshListAdapter);
+                refreshListAdapter.onDateChange(list);
+            }
+
         }
         onIgnoreKeysChangeListener = refreshListAdapter;
     }
@@ -145,6 +168,9 @@ public class NewsFragment extends Fragment
     }
 
     public interface OnIgnoreKeysChangeListener {
-        public void onIgnoreKeysChange(String[] ignoreKeys);
+        void onIgnoreKeysChange(String[] ignoreKeys);
     }
+
+
+
 }
