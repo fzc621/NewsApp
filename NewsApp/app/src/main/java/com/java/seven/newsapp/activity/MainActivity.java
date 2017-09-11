@@ -192,8 +192,6 @@ public class MainActivity extends AppCompatActivity
 
         }  else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,6 +257,8 @@ public class MainActivity extends AppCompatActivity
                 for (int i = 0; i < onIgnoreKeysChangeListeners.size(); ++i) {
                     onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
                 }
+
+
             }
         });
         builder.setNegativeButton("CANCEL", null);

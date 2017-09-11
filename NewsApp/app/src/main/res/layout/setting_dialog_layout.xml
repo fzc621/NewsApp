@@ -60,7 +60,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <TextView
-            android:layout_width="50dp"
+            android:layout_width="55dp"
             android:layout_height="match_parent"
             android:text="ignore"
             android:textSize="15sp"
@@ -71,8 +71,8 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:background="@null"
-            android:hint="put keys to ignore related news here..."
-            android:textSize="10sp"
+            android:hint="put keywords split by ';' to ignore related news..."
+            android:textSize="11sp"
             android:gravity="center_vertical"/>
     </LinearLayout>
     <include layout="@layout/horizontal_line"/>
