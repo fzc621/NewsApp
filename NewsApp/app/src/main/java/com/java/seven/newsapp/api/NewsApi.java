@@ -72,7 +72,10 @@ public class NewsApi {
                     new SimpleNews().setNewsClassTag(NewsCategory.nameToCode(bean.getNewsClassTag()))
                                     .setNews_ID(bean.getNews_ID())
                                     .setNews_Pictures(bean.getNews_Pictures())
-                                    .setNews_Title(bean.getNews_Title()).save();
+                                    .setNews_Title(bean.getNews_Title())
+                                    .setNews_Intro(bean.getNews_Intro())
+                                    .setNews_Author(bean.getNews_Author())
+                                    .setNews_Time(bean.getNews_Time()).save();
                 }
                 return latestNews;
             }

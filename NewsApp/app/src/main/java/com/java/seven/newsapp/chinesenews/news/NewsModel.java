@@ -72,7 +72,11 @@ public class NewsModel implements NewsContract.Model {
                     for (SimpleNews n : list)
                         newList.add(new LatestNews.ListBean().setNews_ID(n.getNews_ID())
                                                               .setNews_Title(n.getNews_Title())
-                                                              .setNews_Pictures(n.getNews_Pictures()));
+//                                                              .setNews_Pictures(n.getNews_Pictures())
+                                                                .setNews_Pictures("")
+                                                                .setNews_Author(n.getNews_Author())
+                                                                .setNews_Intro(n.getNews_Intro())
+                                                                .setNews_Time(n.getNews_Time()));
                     return newList;
                 }
             }).subscribeOn(Schedulers.io())
@@ -99,6 +103,48 @@ public class NewsModel implements NewsContract.Model {
                    }
                });
         }
+    }
+
+    @Override
+    public void getOldNews(final NewsContract.CallBackLatestNews callback, int size, int[] category) {
+        final int size_ = Math.min(size, MAX_SIZE);
+        List<Integer> array = new ArrayList<>();
+        for (int i : category)
+            array.add(i);
+        Observable.from(array).map(new Func1<Integer, List<LatestNews.ListBean>>() {
+            @Override
+            public List<LatestNews.ListBean> call(Integer integer) {
+                List<SimpleNews> list = DataSupport.where("newsClassTag = ?", ""+integer).find(SimpleNews.class);
+                List<LatestNews.ListBean> newList = new ArrayList<>();
+                for (SimpleNews n : list)
+                    newList.add(new LatestNews.ListBean().setNews_ID(n.getNews_ID())
+                            .setNews_Title(n.getNews_Title())
+                            .setNews_Pictures(n.getNews_Pictures()));
+                return newList;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<LatestNews.ListBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted(Not network): ");
+                        if (newsList.size() > size_)
+                            callback.result(newsList.subList(0, size_));
+                        else
+                            callback.result(newsList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError(Not network): ");
+                    }
+
+                    @Override
+                    public void onNext(List<LatestNews.ListBean> listBeen) {
+                        Log.d(TAG, "onNext(Not network: ");
+                        newsList.addAll(listBeen);
+                    }
+                });
     }
 
     @Override
