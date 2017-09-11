@@ -11,17 +11,19 @@ import java.util.List;
 public interface NewsContract {
 
     interface View{
-        void refreshRecyclerVew(List<LatestNews.ListBean> storiesList);
+        void refreshRecyclerView(List<LatestNews.ListBean> storiesList);
     }
 
     interface Presenter{
         void getSearchNews(String keyword);
         void getLatestNews(int size, int[] category);
+        void getOldNews(int size, int[] category);
     }
 
     interface Model{
         void getSearchNews(CallBackLatestNews callback, String keyword);
         void getLatestNews(CallBackLatestNews callback, int size, int[] category);
+        void getOldNews(CallBackLatestNews callback, int size, int[] category);
     }
 
     interface CallBackLatestNews {

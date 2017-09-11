@@ -4,10 +4,16 @@ package com.java.seven.newsapp.api;
  * Created by zzy on 17-9-8.
  */
 
+import android.util.Log;
+
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.bean.News;
+import com.java.seven.newsapp.bean.Record;
 import com.java.seven.newsapp.bean.SimpleNews;
 import com.java.seven.newsapp.chinesenews.news.NewsCategory;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +77,13 @@ public class NewsApi {
                     new SimpleNews().setNewsClassTag(NewsCategory.nameToCode(bean.getNewsClassTag()))
                                     .setNews_ID(bean.getNews_ID())
                                     .setNews_Pictures(bean.getNews_Pictures())
-                                    .setNews_Title(bean.getNews_Title()).save();
+                                    .setNews_Title(bean.getNews_Title())
+                                    .setNews_Intro(bean.getNews_Intro())
+                                    .setNews_Author(bean.getNews_Author())
+                                    .setNews_Time(bean.getNews_Time()).save();
+                    if (DataSupport.where("news_id = ?", bean.getNews_ID()).findFirst(Record.class) != null) {
+                        bean.setRead(true);
+                    }
                 }
                 return latestNews;
             }
@@ -88,11 +100,33 @@ public class NewsApi {
                 .subscribe(subscriber);
     }
 
-    public  void getDetailNews(Subscriber<News> subscriber, String newsId) {
+    public void getDetailNews(Subscriber<News> subscriber, String newsId) {
         tsinghuaService.getDetailNews(newsId)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
+    }
+
+    public void getNews(Subscriber<LatestNews.ListBean> subscriber, String[] ids) {
+        List<Observable<News>> array = new ArrayList<>();
+        for (String id : ids) {
+            array.add(tsinghuaService.getDetailNews(id)
+            .subscribeOn(Schedulers.io())
+            .unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()));
+        }
+        Observable<LatestNews.ListBean> merrge = Observable.merge(array).map(new Func1<News, LatestNews.ListBean>() {
+            @Override
+            public LatestNews.ListBean call(News news) {
+                return new LatestNews.ListBean().setNews_ID(news.getNews_ID())
+                        .setNews_Pictures(news.getNews_Pictures())
+                        .setNews_Title(news.getNews_Title())
+                        .setNews_Author(news.getNews_Author())
+                        .setNews_Intro(news.getNews_Content().substring(0, 20))
+                        .setNews_Time(news.getNews_Time());
+            }
+        });
+        merrge.subscribe(subscriber);
     }
 }

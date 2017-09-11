@@ -1,18 +1,17 @@
 package com.java.seven.newsapp.app;
 
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.content.Context;
-
+import android.os.Environment;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.baidu.tts.client.SpeechSynthesizer;
+import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.AppConstants;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
 
 import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,6 +33,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         super.onCreate();
         LitePal.initialize(this);
         LitePal.getDatabase();
+        Log.d("APP", ""+ DataSupport.count(FavorNews.class));
         boolean isNight = SharedPreferencesUtil.getBoolean(this, AppConstants.ISNIGHT, false);
         if (isNight) {
             //使用夜间模式
