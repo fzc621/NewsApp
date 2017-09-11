@@ -43,6 +43,11 @@ public class RefreshListAdapter extends BaseAdapter
     private LayoutInflater inflater;
     private Context context;
 
+    public void onContextUpdated(Context context) {
+        this.context = context;
+        inflater = LayoutInflater.from(context);
+    }
+
     private LinkedList<LatestNews.ListBean> items;
     private LinkedList<View> views;
 
@@ -208,4 +213,6 @@ public class RefreshListAdapter extends BaseAdapter
 
         this.notifyDataSetChanged();
     }
+
+
 }

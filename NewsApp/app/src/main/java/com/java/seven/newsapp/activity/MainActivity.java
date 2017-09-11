@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println(this.hashCode());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         System.out.println("onCreate");
@@ -105,12 +106,21 @@ public class MainActivity extends AppCompatActivity
 
     private void initData() {
         fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
-        fragments = new ArrayList<>();
-        for (int i = 0; i < subscribeStates.length; ++i) {
-            if (subscribeStates[i]) {
-                NewsFragment newsFragment = new NewsFragment();
-                newsFragment.setCategoryCode(i);
-                fragments.add(newsFragment);
+        if (AppGlobal.fragments == null) {
+            fragments = new ArrayList<>();
+            for (int i = 0; i < subscribeStates.length; ++i) {
+                if (subscribeStates[i]) {
+                    NewsFragment newsFragment = new NewsFragment();
+                    newsFragment.setCategoryCode(i);
+                    fragments.add(newsFragment);
+                }
+            }
+            AppGlobal.fragments = fragments;
+        }
+        else {
+            fragments = AppGlobal.fragments;
+            for (int i = 0; i < fragments.size(); ++i) {
+                ((NewsFragment)(fragments.get(i))).onContextUpdated(this);
             }
         }
         fixedPagerAdapter.setFragments(fragments);
@@ -235,6 +245,15 @@ public class MainActivity extends AppCompatActivity
                 boolean saveDataUsage = saveDataUsageSwitch.isChecked();
                 SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.PREF_KEY_SAVE_DATA_USAGE, saveDataUsage);
                 AppGlobal.saveDataUsage = saveDataUsage;
+                // ignore
+                String ignoreKeysStr = ignoreKeysInput.getText().toString();
+                String[] ignoreKeys = SevenDecoder.decodeShieldKeyWords(ignoreKeysStr);
+                ignoreKeysStr = SevenEncoder.encodeShieldKeyWords(ignoreKeys);
+                SharedPreferencesUtil.setString(MainActivity.this, AppConstants.PREF_KEY_IGNORE, ignoreKeysStr);
+                AppGlobal.ignoreKeys = ignoreKeys;
+                for (int i = 0; i < onIgnoreKeysChangeListeners.size(); ++i) {
+                    onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
+                }
                 // night mode
                 boolean isNight = SharedPreferencesUtil.getBoolean(MainActivity.this, AppConstants.ISNIGHT, false);
                 final boolean setNight = nightModeSwitch.isChecked();
@@ -250,17 +269,6 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
                 }
-                // ignore
-                String ignoreKeysStr = ignoreKeysInput.getText().toString();
-                String[] ignoreKeys = SevenDecoder.decodeShieldKeyWords(ignoreKeysStr);
-                ignoreKeysStr = SevenEncoder.encodeShieldKeyWords(ignoreKeys);
-                SharedPreferencesUtil.setString(MainActivity.this, AppConstants.PREF_KEY_IGNORE, ignoreKeysStr);
-                AppGlobal.ignoreKeys = ignoreKeys;
-                for (int i = 0; i < onIgnoreKeysChangeListeners.size(); ++i) {
-                    onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
-                }
-
-
             }
         });
         builder.setNegativeButton("CANCEL", null);
@@ -277,6 +285,7 @@ public class MainActivity extends AppCompatActivity
             subscribeStates = data.getBooleanArrayExtra(SubscribeActivity.KEY);
             String subscribeStatesStr = SevenEncoder.encodeSubscribeStates(subscribeStates);
             SharedPreferencesUtil.setString(this, AppConstants.PREF_KEY_SUBSCRIBE, subscribeStatesStr);
+            AppGlobal.fragments = null;
             removeFragmentFromActivity();
             recreate();
         }
