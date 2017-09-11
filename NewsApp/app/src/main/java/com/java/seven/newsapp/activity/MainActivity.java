@@ -1,5 +1,7 @@
 package com.java.seven.newsapp.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -11,9 +13,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Switch;
+
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.FixedPagerAdapter;
 
@@ -22,6 +30,7 @@ import com.java.seven.newsapp.chinesenews.news.NewsCategory;
 
 import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.util.AppGlobal;
 import com.java.seven.newsapp.util.SevenDecoder;
 import com.java.seven.newsapp.util.SevenEncoder;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         initViewRef();
+        initSetting();
         initData();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -74,11 +84,16 @@ public class MainActivity extends AppCompatActivity
     /**
      * it recreates the fragments and pager adapter
      */
-    private void initData() {
+
+    private void initSetting() {
         String subscribeStatesStr = SharedPreferencesUtil.getString(this, AppConstants.PREF_KEY_SUBSCRIBE,
                 AppConstants.DEFAULT_SUBSCRIBE_STATE);
         subscribeStates = SevenDecoder.decodeSubscribeStatesStr(subscribeStatesStr);
+        AppGlobal.saveDataUsage = SharedPreferencesUtil.getBoolean(this, AppConstants.PREF_KEY_SAVE_DATA_USAGE,
+                AppConstants.DEFAULT_SAVE_DATA_USAGE);
+    }
 
+    private void initData() {
         fixedPagerAdapter = new FixedPagerAdapter(getSupportFragmentManager());
         fragments = new ArrayList<>();
         for (int i = 0; i < subscribeStates.length; ++i) {
@@ -156,7 +171,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(MainActivity.this, FavorActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_setting) {
+            onSettingClicked();
+
 
         }  else if (id == R.id.nav_share) {
 
@@ -175,8 +192,30 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, SUBSCRIBE_ACTIVITY_REQUEST_CODE);
     }
 
-    private void onSubscribeResult() {
+    private void onSettingClicked() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialog = inflater.inflate(R.layout.setting_dialog_layout,(ViewGroup)findViewById(R.id.dialog));
 
+        // initViewRef
+        final Switch saveDataUsageSwitch = dialog.findViewById(R.id.save_data_usage_switch);
+        final Switch nightModeSwitch = dialog.findViewById(R.id.night_mode_switch);
+
+        // initView
+        saveDataUsageSwitch.setChecked(AppGlobal.saveDataUsage);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Setting");
+        builder.setView(dialog);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean saveDataUsage = saveDataUsageSwitch.isChecked();
+                SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.PREF_KEY_SAVE_DATA_USAGE, saveDataUsage);
+                AppGlobal.saveDataUsage = saveDataUsage;
+            }
+        });
+        builder.setNegativeButton("CANCEL", null);
+        builder.show();
     }
 
 
@@ -186,7 +225,6 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == SUBSCRIBE_ACTIVITY_REQUEST_CODE &&
                 resultCode == SubscribeActivity.RESULT_CODE) {
-            List<Integer> categoryCodesList = new ArrayList<>();
             subscribeStates = data.getBooleanArrayExtra(SubscribeActivity.KEY);
             String subscribeStatesStr = SevenEncoder.encodeSubscribeStates(subscribeStates);
             SharedPreferencesUtil.setString(this, AppConstants.PREF_KEY_SUBSCRIBE, subscribeStatesStr);
