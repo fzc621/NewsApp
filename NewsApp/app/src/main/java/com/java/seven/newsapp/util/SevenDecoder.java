@@ -1,5 +1,7 @@
 package com.java.seven.newsapp.util;
 
+import java.util.ArrayList;
+
 /**
  * Created by caibao on 17-9-10.
  */
@@ -15,5 +17,24 @@ public class SevenDecoder {
                 states[i] = false;
         }
         return states;
+    }
+
+    public static String[] decodeShieldKeyWords(String shieldKeywordsStr) {
+        String[] temp = shieldKeywordsStr.split(";");
+        for (int i = 0; i < temp.length; ++i) {
+            temp[i] = temp[i].trim();
+        }
+
+        ArrayList<String> shieldKeywordsList = new ArrayList<>();
+        for (int i = 0; i < temp.length; ++i) {
+            if (!temp[i].equals(""))
+                shieldKeywordsList.add(temp[i]);
+        }
+
+        String[] shieldKeywords = new String[shieldKeywordsList.size()];
+        for (int i = 0; i < shieldKeywords.length; ++i) {
+            shieldKeywords[i] = shieldKeywordsList.get(i);
+        }
+        return shieldKeywords;
     }
 }

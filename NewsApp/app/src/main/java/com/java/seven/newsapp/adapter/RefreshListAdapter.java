@@ -18,7 +18,10 @@ import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.chinesenews.content.ContentActivity;
+import com.java.seven.newsapp.chinesenews.content.ContentContract;
+import com.java.seven.newsapp.chinesenews.news.NewsFragment;
 import com.java.seven.newsapp.util.AppGlobal;
+import com.java.seven.newsapp.util.SevenFilter;
 import com.java.seven.newsapp.util.SevenPreprocessor;
 
 import java.util.Collections;
@@ -31,7 +34,8 @@ import java.util.List;
  * Map a position with to a view
  * position -> LatestNews.ListBean[i] -> view(a news item)
  */
-public class RefreshListAdapter extends BaseAdapter {
+public class RefreshListAdapter extends BaseAdapter
+    implements NewsFragment.OnIgnoreKeysChangeListener {
 
     private LayoutInflater inflater;
     private Context context;
@@ -173,5 +177,21 @@ public class RefreshListAdapter extends BaseAdapter {
             imageContainer = itemView.findViewById(R.id.image_container);
             newsFoot = itemView.findViewById(R.id.latest_news_foot);
         }
+    }
+
+    @Override
+    public void onIgnoreKeysChange(String[] ignoreKeys) {
+        Iterator<LatestNews.ListBean> iterator = items.iterator();
+        Iterator<View> viewIterator = views.iterator();
+        while(iterator.hasNext()) {
+            LatestNews.ListBean item = iterator.next();
+            viewIterator.next();
+            if (!SevenFilter.keep(item, ignoreKeys)) {
+                iterator.remove();
+                viewIterator.remove();
+            }
+        }
+
+        this.notifyDataSetChanged();
     }
 }

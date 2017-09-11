@@ -6,4 +6,5 @@ package com.java.seven.newsapp.util;
 
 public class AppGlobal {
     public static boolean saveDataUsage = AppConstants.DEFAULT_SAVE_DATA_USAGE;
+    public static String[] ignoreKeys = {};
 }
