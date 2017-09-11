@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.java.seven.newsapp.bean.LatestNews;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,17 +33,17 @@ public class NewsPresenter implements NewsContract.Presenter {
         },
         size, category);
     }
-//
-//    @Override
-//    public void getInitNews(int size, int[] category) {
-//        Log.d(TAG, "getInitNews");
-//        model.getInitNews(new NewsContract.CallBackLatestNews() {
-//                                @Override
-//                                public void result(List<LatestNews.ListBean> list) {
-//                                    view.refreshRecyclerVew(list);
-//                                }
-//        }, size, category);
-//    }
+
+    @Override
+    public void getInitNews(int size, int[] category) throws IOException, ClassNotFoundException {
+        Log.d(TAG, "getInitNews");
+        model.getInitNews(new NewsContract.CallBackLatestNews() {
+                                @Override
+                                public void result(List<LatestNews.ListBean> list) {
+                                    view.refreshRecyclerVew(list);
+                                }
+        }, size, category);
+    }
 
     @Override
     public void getSearchNews(String keyword) {

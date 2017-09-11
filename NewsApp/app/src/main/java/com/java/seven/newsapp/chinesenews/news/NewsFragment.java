@@ -18,6 +18,7 @@ import com.java.seven.newsapp.util.AppGlobal;
 import com.java.seven.newsapp.util.SevenFilter;
 import com.java.seven.newsapp.widgets.RefreshListView;
 
+import java.io.IOException;
 import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,6 @@ public class NewsFragment extends Fragment
     RefreshListView refreshListView;
     private NewsContract.Presenter presenter;
     private NewsFragment.OnIgnoreKeysChangeListener onIgnoreKeysChangeListener;
-    boolean firstCreate = true;
 
     public NewsFragment() {
         presenter = new NewsPresenter(this);
@@ -54,12 +54,24 @@ public class NewsFragment extends Fragment
 
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
-//                presenter.getInitNews(10, categoryCodes);
-            presenter.getMoreNews(5, categoryCodes);
+            try {
+                presenter.getInitNews(10, categoryCodes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+//            presenter.getMoreNews(5, categoryCodes);
         } else {
             int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-//                presenter.getInitNews(10, categoryCodes);
-            presenter.getMoreNews(5, categoryCodes);
+            try {
+                presenter.getInitNews(10, categoryCodes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+//            presenter.getMoreNews(5, categoryCodes);
         }
 
         return fragmentView;

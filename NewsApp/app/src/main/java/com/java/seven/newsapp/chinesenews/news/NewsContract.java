@@ -2,6 +2,7 @@ package com.java.seven.newsapp.chinesenews.news;
 
 import com.java.seven.newsapp.bean.LatestNews;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface NewsContract {
 
     interface Presenter{
         void getSearchNews(String keyword);
-//        void getInitNews(int size, int[] category); // init
+        void getInitNews(int size, int[] category) throws IOException, ClassNotFoundException; // init
 //        void getCurrentNews(); // no change, just for light/night mode etc.
         void getMoreNews(int size, int[] category); // add more news to current news
         void getLatestNews(int size, int[] category);
@@ -25,7 +26,7 @@ public interface NewsContract {
     interface Model{
         void getSearchNews(CallBackLatestNews callback, String keyword);
         void getLatestNews(CallBackLatestNews callback, int size, int[] category);
-//        void getInitNews(CallBackLatestNews callback, int size, int[] category); // init
+        void getInitNews(CallBackLatestNews callback, int size, int[] category) throws IOException, ClassNotFoundException; // init
 //        void getCurrentNews(CallBackLatestNews callback); // no change, just for light/night mode etc.
         void getMoreNews(CallBackLatestNews callback, int size, int[] category); // add more news to current news
     }

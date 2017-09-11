@@ -2,6 +2,7 @@ package com.java.seven.newsapp.bean;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class LatestNews extends DataSupport{
         this.list = list;
     }
 
-    public static class ListBean extends DataSupport{
+    public static class ListBean extends DataSupport implements Serializable {
         /**
          * lang_Type : zh-CN
          * newsClassTag : 科技
