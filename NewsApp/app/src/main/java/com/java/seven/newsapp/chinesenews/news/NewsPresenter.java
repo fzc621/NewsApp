@@ -34,6 +34,17 @@ public class NewsPresenter implements NewsContract.Presenter {
     }
 
     @Override
+    public void getOldNews(int size, int[] category) {
+        Log.d(TAG, "getOldNews");
+        model.getOldNews(new NewsContract.CallBackLatestNews() {
+                                @Override
+                                public void result(List<LatestNews.ListBean> list) {
+                                    view.refreshRecyclerVew(list);
+                                }
+        }, size, category);
+    }
+
+    @Override
     public void getSearchNews(String keyword) {
         Log.d(TAG, "getSearchNews");
         model.getSearchNews(new NewsContract.CallBackLatestNews() {

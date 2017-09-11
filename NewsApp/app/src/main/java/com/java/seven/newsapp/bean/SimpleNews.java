@@ -11,6 +11,9 @@ public class SimpleNews extends DataSupport{
     private String news_ID;
     private String news_Pictures;
     private String news_Title;
+    private String news_Intro;
+    private String news_Author;
+    private String news_Time;
 
 
     public int getNewsClassTag() {
@@ -51,4 +54,28 @@ public class SimpleNews extends DataSupport{
         return this;
     }
 
+    public String getNews_Author() { return news_Author; }
+
+    public SimpleNews setNews_Author(String news_Author) {
+        this.news_Author = news_Author;
+        return this;
+    }
+
+    public String getNews_Time() {
+        return news_Time;
+    }
+
+    public SimpleNews setNews_Time(String news_Time) {
+        this.news_Time = news_Time;
+        return this;
+    }
+
+    public String getNews_Intro() {
+        return news_Intro;
+    }
+
+    public SimpleNews setNews_Intro(String news_Intro) {
+        this.news_Intro = news_Intro;
+        return this;
+    }
 }
