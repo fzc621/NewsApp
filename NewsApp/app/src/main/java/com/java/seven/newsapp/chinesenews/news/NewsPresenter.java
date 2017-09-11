@@ -73,7 +73,7 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getMoreNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
-                view.refreshRecyclerVew(list);
+                view.refreshRecyclerView(list);
             }
         }, size, category);
     }
