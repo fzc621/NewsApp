@@ -1,5 +1,6 @@
 package com.java.seven.newsapp.chinesenews.content;
 
+import com.bumptech.glide.load.model.StringLoader;
 import com.java.seven.newsapp.bean.News;
 
 /**
@@ -10,6 +11,7 @@ public class ContentPresenter implements ContentContract.Presenter {
 
     private ContentContract.View view;
     private ContentContract.Model model;
+    private String TAG = "ContentPresenter";
 
     public ContentPresenter(ContentContract.View view) {
         this.view = view;

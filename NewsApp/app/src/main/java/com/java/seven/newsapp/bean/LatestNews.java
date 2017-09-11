@@ -89,6 +89,10 @@ public class LatestNews extends DataSupport{
         private String news_URL;
         private String news_Video;
         private String news_Intro;
+        private boolean read = false;
+
+        public boolean getRead() { return read; }
+        public void setRead(boolean read) { this.read = read; }
 
         public String getLang_Type() {
             return lang_Type;

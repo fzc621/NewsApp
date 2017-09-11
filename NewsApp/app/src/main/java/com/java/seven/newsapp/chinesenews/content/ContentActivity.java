@@ -24,6 +24,8 @@ import com.baidu.tts.client.TtsMode;
 import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.adapter.RefreshListAdapter;
+import com.java.seven.newsapp.bean.LatestNews;
+import com.java.seven.newsapp.bean.Record;
 import com.java.seven.newsapp.util.HtmlFormat;
 import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.HtmlFormat;
@@ -57,6 +59,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,6 +72,13 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         
         final Intent intent = getIntent();
         id = intent.getStringExtra(RefreshListAdapter.NEWS_ID);
+
+        // 记录该新闻已读
+        Record records = DataSupport.where("news_id = ?", id).findFirst(Record.class);
+        if (records == null) {
+            new Record().setNews_id(id).save();
+        }
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
