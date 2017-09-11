@@ -4,11 +4,16 @@ package com.java.seven.newsapp.api;
  * Created by zzy on 17-9-8.
  */
 
+import android.util.Log;
+
 import com.google.android.gms.common.data.DataBufferObserver;
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.bean.News;
+import com.java.seven.newsapp.bean.Record;
 import com.java.seven.newsapp.bean.SimpleNews;
 import com.java.seven.newsapp.chinesenews.news.NewsCategory;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +81,9 @@ public class NewsApi {
                                     .setNews_Intro(bean.getNews_Intro())
                                     .setNews_Author(bean.getNews_Author())
                                     .setNews_Time(bean.getNews_Time()).save();
+                    if (DataSupport.where("news_id = ?", bean.getNews_ID()).findFirst(Record.class) != null) {
+                        bean.setRead(true);
+                    }
                 }
                 return latestNews;
             }
