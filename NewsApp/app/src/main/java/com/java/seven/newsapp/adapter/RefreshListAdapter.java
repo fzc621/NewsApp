@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
 import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.chinesenews.content.ContentActivity;
+import com.java.seven.newsapp.util.AppGlobal;
 import com.java.seven.newsapp.util.SevenPreprocessor;
 
 import java.util.Collections;
@@ -90,6 +91,8 @@ public class RefreshListAdapter extends BaseAdapter {
 
             int numUrls = urls.length;
             int numImgs = Math.max(0, Math.min(numUrls, 3));
+            if (AppGlobal.saveDataUsage == true)
+                numImgs = 0;
 
             int layoutId = -1;
             switch (numImgs) {
