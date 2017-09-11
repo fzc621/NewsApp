@@ -17,4 +17,6 @@ public class AppConstants {
     public static final String DEFAULT_SUBSCRIBE_STATE = "1 1 1 1 1 1 1 1 1 1 1 1 1";
     public static final String PREF_KEY_SAVE_DATA_USAGE = "PREF_KEY_SAVE_DATA_USAGE";
     public static final boolean DEFAULT_SAVE_DATA_USAGE = false;
+    public static final String PREF_KEY_IGNORE = "PREF_KEY_IGNORE";
+    public static final String DEFAULT_KEY_IGNORE = "";
 }

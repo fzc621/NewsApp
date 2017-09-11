@@ -21,6 +21,8 @@ import com.java.seven.newsapp.bean.LatestNews;
 import com.java.seven.newsapp.chinesenews.news.NewsCategory;
 import com.java.seven.newsapp.chinesenews.news.NewsContract;
 import com.java.seven.newsapp.chinesenews.news.NewsPresenter;
+import com.java.seven.newsapp.util.AppGlobal;
+import com.java.seven.newsapp.util.SevenFilter;
 import com.java.seven.newsapp.widgets.RefreshListView;
 
 import java.util.List;
@@ -29,7 +31,8 @@ import java.util.List;
  * Created by caibao on 17-9-11.
  */
 
-public class SearchActivity extends AppCompatActivity implements NewsContract.View, SearchView.OnQueryTextListener {
+public class SearchActivity extends AppCompatActivity
+        implements NewsContract.View, SearchView.OnQueryTextListener {
 
     private static final String TAG = "NewsFragment";
     ListView searchListView;
@@ -71,6 +74,8 @@ public class SearchActivity extends AppCompatActivity implements NewsContract.Vi
     @Override
     public void refreshRecyclerVew(List<LatestNews.ListBean> list) {
         Log.d(TAG, "refreshRecyclerVew: ");
+        list = SevenFilter.filter(list, AppGlobal.ignoreKeys);
+
         RefreshListAdapter refreshListAdapter = new RefreshListAdapter(this, list);
         searchListView.setAdapter(refreshListAdapter);
         if (list.size() == 0) {

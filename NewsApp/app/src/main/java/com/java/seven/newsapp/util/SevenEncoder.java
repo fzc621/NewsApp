@@ -20,4 +20,15 @@ public class SevenEncoder {
         }
         return subscribeStatesStr;
     }
+
+    public static String encodeShieldKeyWords(String[] shieldKeywords) {
+        String shieldKeywordsStr = "";
+        for (int i = 0; i < shieldKeywords.length; ++i) {
+                shieldKeywordsStr += shieldKeywords[i];
+            if (i < shieldKeywords.length - 1) {
+                shieldKeywordsStr += "; ";
+            }
+        }
+        return shieldKeywordsStr;
+    }
 }
