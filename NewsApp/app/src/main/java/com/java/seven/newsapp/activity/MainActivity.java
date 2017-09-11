@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager pager;
     private List<OnIgnoreKeysChangeListener> onIgnoreKeysChangeListeners;
 
+    public MainActivity() { AppGlobal.activity = this; }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

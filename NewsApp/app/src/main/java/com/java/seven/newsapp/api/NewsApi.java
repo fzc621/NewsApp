@@ -60,12 +60,10 @@ public class NewsApi {
         return tsinghuaApi;
     }
 
-    public void getLatestNews(Subscriber<LatestNews> subscriber, int size, int[] category){
+    public void getLatestNews(Subscriber<LatestNews> subscriber, int size, int pageNo, int[] category){
         List<Observable<LatestNews>> array = new ArrayList<>();
-        if (category.length == 1)
-            size *= 2;
         for (int i : category) {
-            array.add(tsinghuaService.getLatestNews(i, size)
+            array.add(tsinghuaService.getLatestNews(i, size, pageNo)
                             .subscribeOn(Schedulers.io())
                             .unsubscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread()));

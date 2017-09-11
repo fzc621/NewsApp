@@ -18,6 +18,7 @@ import com.java.seven.newsapp.util.AppGlobal;
 import com.java.seven.newsapp.util.SevenFilter;
 import com.java.seven.newsapp.widgets.RefreshListView;
 
+import java.io.IOException;
 import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,11 +54,24 @@ public class NewsFragment extends Fragment
 
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
-            presenter.getLatestNews(20, categoryCodes);
-        }
-        else {
+            try {
+                presenter.getInitNews(10, categoryCodes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+//            presenter.getMoreNews(5, categoryCodes);
+        } else {
             int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-            presenter.getLatestNews(20, categoryCodes);
+            try {
+                presenter.getInitNews(10, categoryCodes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+//            presenter.getMoreNews(5, categoryCodes);
         }
 
         return fragmentView;
@@ -110,11 +124,11 @@ public class NewsFragment extends Fragment
     public void onDownPullRefresh() {
         if (categoryCode != 0) {
             int[] categoryCodes = {categoryCode};
-            presenter.getLatestNews(INC, categoryCodes);
+            presenter.getMoreNews(INC, categoryCodes);
         }
         else {
             int[] categoryCodes = NewsCategory.getCategoryCodesButAll();
-            presenter.getLatestNews(INC, categoryCodes);
+            presenter.getMoreNews(INC, categoryCodes);
         }
     }
 
