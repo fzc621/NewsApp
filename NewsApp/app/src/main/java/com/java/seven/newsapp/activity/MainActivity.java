@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
             ignoreKeysInput.setText(SevenEncoder.encodeShieldKeyWords(AppGlobal.ignoreKeys));
         }
 
-        nightModeSwitch.setChecked(SharedPreferencesUtil.getBoolean(MainActivity.this, AppConstants.ISNIGHT, false));
+        nightModeSwitch.setChecked(AppGlobal.isNight);
 
         // set dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -255,12 +255,12 @@ public class MainActivity extends AppCompatActivity
                     onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
                 }
                 // night mode
-                boolean isNight = SharedPreferencesUtil.getBoolean(MainActivity.this, AppConstants.ISNIGHT, false);
                 final boolean setNight = nightModeSwitch.isChecked();
-                SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.ISNIGHT, setNight);
-                AppCompatDelegate.setDefaultNightMode(setNight?AppCompatDelegate.MODE_NIGHT_YES:AppCompatDelegate.MODE_NIGHT_NO);
-                removeFragmentFromActivity();
-                if(isNight != setNight) {
+                if(AppGlobal.isNight != setNight) {
+                    AppGlobal.isNight = setNight;
+                    SharedPreferencesUtil.setBoolean(MainActivity.this, AppConstants.ISNIGHT, setNight);
+                    AppCompatDelegate.setDefaultNightMode(setNight?AppCompatDelegate.MODE_NIGHT_YES:AppCompatDelegate.MODE_NIGHT_NO);
+                    removeFragmentFromActivity();
                     MainActivity.this.runOnUiThread(new Runnable()
                     {
                         public void run()

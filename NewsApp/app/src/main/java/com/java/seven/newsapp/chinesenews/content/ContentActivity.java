@@ -159,11 +159,10 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
                 break;
             case R.id.item_share:
                 showShare();
-                Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.item_speak:
                 startTTS();
-                Toast.makeText(this, "speak被选择了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sysnthesizing...", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

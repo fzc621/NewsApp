@@ -14,4 +14,5 @@ public class AppGlobal {
     public static String[] ignoreKeys = {};
     public static Activity activity;
     public static List<Fragment> fragments;
+    public static boolean isNight = false;
 }
