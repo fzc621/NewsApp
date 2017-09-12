@@ -3,21 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_search"
-        android:icon="@drawable/search"
+        android:icon="@drawable/seven_search"
         android:title="Search"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/item_night"
-        android:icon="@drawable/agriculture"
-        android:title="@string/night_mode"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/item_light"
-        android:title="@string/light_mode"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/item_setting"
-        android:icon="@drawable/set"
-        android:title="Settings"
-        app:showAsAction="never" />
 </menu>

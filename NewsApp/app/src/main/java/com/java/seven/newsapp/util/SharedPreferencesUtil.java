@@ -90,5 +90,6 @@ public class SharedPreferencesUtil {
         editor.clear();
         editor.apply();
     }
+
 }
 
