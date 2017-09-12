@@ -8,6 +8,7 @@ import android.util.Log;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.java.seven.newsapp.bean.FavorNews;
 import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.util.AppGlobal;
 import com.java.seven.newsapp.util.SharedPreferencesUtil;
 
 import org.litepal.LitePal;
@@ -35,6 +36,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         LitePal.getDatabase();
         Log.d("APP", ""+ DataSupport.count(FavorNews.class));
         boolean isNight = SharedPreferencesUtil.getBoolean(this, AppConstants.ISNIGHT, false);
+        AppGlobal.isNight = isNight;
         if (isNight) {
             //使用夜间模式
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
