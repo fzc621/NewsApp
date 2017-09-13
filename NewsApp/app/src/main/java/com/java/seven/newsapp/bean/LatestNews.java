@@ -2,6 +2,7 @@ package com.java.seven.newsapp.bean;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class LatestNews extends DataSupport{
         this.list = list;
     }
 
-    public static class ListBean extends DataSupport{
+    public static class ListBean extends DataSupport implements Serializable {
         /**
          * lang_Type : zh-CN
          * newsClassTag : 科技
@@ -89,6 +90,10 @@ public class LatestNews extends DataSupport{
         private String news_URL;
         private String news_Video;
         private String news_Intro;
+        private boolean read = false;
+
+        public boolean getRead() { return read; }
+        public void setRead(boolean read) { this.read = read; }
 
         public String getLang_Type() {
             return lang_Type;
@@ -110,8 +115,9 @@ public class LatestNews extends DataSupport{
             return news_Author;
         }
 
-        public void setNews_Author(String news_Author) {
+        public ListBean setNews_Author(String news_Author) {
             this.news_Author = news_Author;
+            return this;
         }
 
         public String getNews_ID() {
@@ -144,8 +150,9 @@ public class LatestNews extends DataSupport{
             return news_Time;
         }
 
-        public void setNews_Time(String news_Time) {
+        public ListBean setNews_Time(String news_Time) {
             this.news_Time = news_Time;
+            return this;
         }
 
         public String getNews_Title() {
@@ -177,8 +184,9 @@ public class LatestNews extends DataSupport{
             return news_Intro;
         }
 
-        public void setNews_Intro(String news_Intro) {
+        public ListBean setNews_Intro(String news_Intro) {
             this.news_Intro = news_Intro;
+            return this;
         }
     }
 }

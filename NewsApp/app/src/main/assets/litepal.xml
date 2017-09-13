@@ -1,9 +1,11 @@
 <litepal>
     <dbname value="News"></dbname>
-    <version value="2" />
+    <version value="5" />
     <list>
         <!--<mapping class="com.java.seven.newsapp.bean.Schedule"/>-->
         <mapping class="com.java.seven.newsapp.bean.LatestNews"></mapping>
         <mapping class="com.java.seven.newsapp.bean.SimpleNews"></mapping>
+        <mapping class="com.java.seven.newsapp.bean.FavorNews"></mapping>
+        <mapping class="com.java.seven.newsapp.bean.Record"></mapping>
     </list>
 </litepal>

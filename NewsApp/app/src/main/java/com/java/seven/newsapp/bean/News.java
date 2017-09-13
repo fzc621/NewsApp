@@ -123,16 +123,18 @@ public class News {
         return news_Content;
     }
 
-    public void setNews_Content(String news_Content) {
+    public News setNews_Content(String news_Content) {
         this.news_Content = news_Content;
+        return this;
     }
 
     public String getNews_ID() {
         return news_ID;
     }
 
-    public void setNews_ID(String news_ID) {
+    public News setNews_ID(String news_ID) {
         this.news_ID = news_ID;
+        return this;
     }
 
     public String getNews_Journal() {
@@ -147,8 +149,9 @@ public class News {
         return news_Pictures;
     }
 
-    public void setNews_Pictures(String news_Pictures) {
+    public News setNews_Pictures(String news_Pictures) {
         this.news_Pictures = news_Pictures;
+        return this;
     }
 
     public String getNews_Source() {
@@ -171,16 +174,18 @@ public class News {
         return news_Title;
     }
 
-    public void setNews_Title(String news_Title) {
+    public News setNews_Title(String news_Title) {
         this.news_Title = news_Title;
+        return this;
     }
 
     public String getNews_URL() {
         return news_URL;
     }
 
-    public void setNews_URL(String news_URL) {
+    public News setNews_URL(String news_URL) {
         this.news_URL = news_URL;
+        return this;
     }
 
     public String getNews_Video() {

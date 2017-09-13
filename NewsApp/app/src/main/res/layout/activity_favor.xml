@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.java.seven.newsapp.widgets.RefreshListView
+        android:id="@+id/refresh_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#00000000"
+        android:dividerHeight="2dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

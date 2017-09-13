@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +23,23 @@ import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 import com.bumptech.glide.Glide;
 import com.java.seven.newsapp.R;
-import com.java.seven.newsapp.adapter.NewsSummaryAdapter;
-import com.java.seven.newsapp.util.AppConstants;
+import com.java.seven.newsapp.adapter.RefreshListAdapter;
+import com.java.seven.newsapp.bean.LatestNews;
+import com.java.seven.newsapp.bean.Record;
 import com.java.seven.newsapp.util.HtmlFormat;
-import com.java.seven.newsapp.util.SharedPreferencesUtil;
+import com.java.seven.newsapp.bean.FavorNews;
+import com.java.seven.newsapp.util.HtmlFormat;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ContentActivity extends AppCompatActivity implements ContentContract.View, SpeechSynthesizerListener {
-
+    private static final String TAG = "ContentActivity";
     @Bind(R.id.toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
     @Bind(R.id.news_image)
@@ -41,6 +48,9 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     WebView newsContent;
     private String id;
     private String text;
+    private String title;
+    private String url;
+    private String imageUrl;
 
     private FloatingActionButton fab;
     private ContentContract.Presenter presenter;
@@ -49,6 +59,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,8 +67,18 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
         presenter = new ContentPresenter(this);
 
+        // 获取语音合成对象实例
+        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        
         final Intent intent = getIntent();
-        id = intent.getStringExtra(NewsSummaryAdapter.NEWS_ID);
+        id = intent.getStringExtra(RefreshListAdapter.NEWS_ID);
+
+        // 记录该新闻已读
+        Record records = DataSupport.where("news_id = ?", id).findFirst(Record.class);
+        if (records == null) {
+            new Record().setNews_id(id).save();
+        }
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +95,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
     @Override
     public void setTitleImage(String url) {
+        this.imageUrl = url;
         Glide.with(this).load(url).into(newsImage);
     }
 
@@ -92,6 +114,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
 
     @Override
     public void setTitle(String title) {
+        this.title = title;
         collapsingToolbarLayout.setTitle(title);
     }
 
@@ -101,9 +124,27 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     }
 
     @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.news_content, menu);
+        MenuItem favorItem = menu.findItem(R.id.item_favorite);
+
+        List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+        if (list.size() == 0) {
+            // unfavorite state
+            favorItem.setIcon(getDrawable(R.drawable.seven_unfavor));
+        }
+        else {
+            // favorite state
+            favorItem.setIcon(getDrawable(R.drawable.seven_favor_white));
+        }
+
+
         return true;
     }
 
@@ -119,14 +160,28 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
         }*/
         switch (item.getItemId()) {
             case R.id.item_favorite:
-                Toast.makeText(this, "favorite被选择了", Toast.LENGTH_SHORT).show();
+                List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+                if (list.size() == 0) {
+                    new FavorNews().setNewsId(this.id)
+                            .setNews_content(this.text)
+                            .setNews_pictures(this.imageUrl)
+                            .setNews_title(this.title)
+                            .setNews_url(this.url).save();
+                    Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
+                    item.setIcon(getDrawable(R.drawable.seven_favor_white));
+                }
+                else {
+                    DataSupport.deleteAll(FavorNews.class, "news_id = ?", this.id);
+                    Toast.makeText(this, "unfavorite", Toast.LENGTH_SHORT).show();
+                    item.setIcon(getDrawable(R.drawable.seven_unfavor));
+                }
                 break;
             case R.id.item_share:
-                Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();
+                showShare();
                 break;
             case R.id.item_speak:
                 startTTS();
-                Toast.makeText(this, "speak被选择了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sysnthesizing...", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -135,8 +190,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     }
 
     private void startTTS() {
-        // 获取语音合成对象实例
-        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+
         // 设置context
         mSpeechSynthesizer.setContext(this);
         // 设置语音合成状态监听器
@@ -149,7 +203,7 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
             mSpeechSynthesizer.initTts(TtsMode.MIX);
             mSpeechSynthesizer.speak(text);
         } else {
-            // 授权失败
+            Log.d(TAG, "授权失败");
         }
     }
 
@@ -179,5 +233,30 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     public void onBackPressed() {
         super.onBackPressed();
         mSpeechSynthesizer.stop();
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+//关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+    // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
+        oks.setTitle(title);
+
+        String shareText;
+        if(text.length() < 100)
+            shareText = text;
+        else
+            shareText = text.substring(0,100);
+    // text是分享文本，所有平台都需要这个字段
+        oks.setText(shareText + " " + url);
+        
+        oks.setImageUrl(imageUrl);
+
+    // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+
+// 启动分享GUI
+        oks.show(this);
     }
 }

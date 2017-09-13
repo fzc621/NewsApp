@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.java.seven.newsapp.bean.LatestNews;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,10 +28,21 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getLatestNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
-                view.refreshRecyclerVew(list);
+                view.refreshRecyclerView(list);
             }
         },
         size, category);
+    }
+
+    @Override
+    public void getInitNews(int size, int[] category) throws IOException, ClassNotFoundException {
+        Log.d(TAG, "getInitNews");
+        model.getInitNews(new NewsContract.CallBackLatestNews() {
+                                @Override
+                                public void result(List<LatestNews.ListBean> list) {
+                                    view.refreshRecyclerView(list);
+                                }
+        }, size, category);
     }
 
     @Override
@@ -39,9 +51,31 @@ public class NewsPresenter implements NewsContract.Presenter {
         model.getSearchNews(new NewsContract.CallBackLatestNews() {
             @Override
             public void result(List<LatestNews.ListBean> list) {
-                view.refreshRecyclerVew(list);
+                view.refreshRecyclerView(list);
             }
         }, keyword);
+    }
+
+//    @Override
+//    public void getCurrentNews() {
+//        Log.d(TAG, "getCurrentNews");
+//        model.getCurrentNews(new NewsContract.CallBackLatestNews() {
+//                                @Override
+//                                public void result(List<LatestNews.ListBean> list) {
+//                                    view.refreshRecyclerVew(list);
+//                                }
+//                            });
+//    }
+
+    @Override
+    public void getMoreNews(int size, int[] category) {
+        Log.d(TAG, "getMoreNews");
+        model.getMoreNews(new NewsContract.CallBackLatestNews() {
+            @Override
+            public void result(List<LatestNews.ListBean> list) {
+                view.refreshRecyclerView(list);
+            }
+        }, size, category);
     }
 
 }

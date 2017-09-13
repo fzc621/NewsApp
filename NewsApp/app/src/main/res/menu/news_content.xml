@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/item_favorite"
-        android:icon="@drawable/favorites"
+        android:icon="@drawable/seven_favor_white"
         android:title="Item"
         app:showAsAction="always" />
     <item
         android:id="@+id/item_share"
-        android:icon="@drawable/ic_menu_share"
+        android:icon="@drawable/seven_share_white"
         android:title="Item"
         app:showAsAction="always" />
     <item
         android:id="@+id/item_speak"
-        android:icon="@android:drawable/ic_btn_speak_now"
+        android:icon="@drawable/seven_speak"
         android:title="Item"
         app:showAsAction="always" />
 </menu>
