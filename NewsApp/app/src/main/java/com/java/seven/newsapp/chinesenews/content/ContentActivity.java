@@ -132,6 +132,19 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.news_content, menu);
+        MenuItem favorItem = menu.findItem(R.id.item_favorite);
+
+        List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
+        if (list.size() == 0) {
+            // unfavorite state
+            favorItem.setIcon(getDrawable(R.drawable.seven_unfavor));
+        }
+        else {
+            // favorite state
+            favorItem.setIcon(getDrawable(R.drawable.seven_favor_white));
+        }
+
+
         return true;
     }
 
@@ -155,10 +168,12 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
                             .setNews_title(this.title)
                             .setNews_url(this.url).save();
                     Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
+                    item.setIcon(getDrawable(R.drawable.seven_favor_white));
                 }
                 else {
                     DataSupport.deleteAll(FavorNews.class, "news_id = ?", this.id);
                     Toast.makeText(this, "unfavorite", Toast.LENGTH_SHORT).show();
+                    item.setIcon(getDrawable(R.drawable.seven_unfavor));
                 }
                 break;
             case R.id.item_share:
