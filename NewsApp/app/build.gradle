@@ -4,6 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.java.seven.newsapp"
         minSdkVersion 21
         targetSdkVersion 26
@@ -59,4 +60,5 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Core-3.0.2.jar')
     compile files('libs/ShareSDK-Renren-3.0.2.jar')
     compile files('libs/ShareSDK-Wechat-Moments-3.0.2.jar')
+    compile 'com.android.support:multidex:'
 }

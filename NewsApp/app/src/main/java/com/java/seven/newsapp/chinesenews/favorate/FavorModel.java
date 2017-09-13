@@ -70,7 +70,7 @@ public class FavorModel implements FavorContract.Model {
                         .setNews_ID(favorNews.getNewsId());
             }
         }).subscribeOn(Schedulers.io())
-        .subscribeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<LatestNews.ListBean>() {
             @Override
             public void onCompleted() {
