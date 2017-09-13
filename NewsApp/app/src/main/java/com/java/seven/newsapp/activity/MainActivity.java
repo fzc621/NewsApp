@@ -255,7 +255,6 @@ public class MainActivity extends AppCompatActivity
                     onIgnoreKeysChangeListeners.get(i).onIgnoreKeysChange(ignoreKeys);
                 }
                 // night mode
-
                 final boolean setNight = nightModeSwitch.isChecked();
                 if(AppGlobal.isNight != setNight) {
                     AppGlobal.isNight = setNight;

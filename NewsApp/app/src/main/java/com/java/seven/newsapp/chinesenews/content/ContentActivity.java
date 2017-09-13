@@ -149,7 +149,11 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
             case R.id.item_favorite:
                 List<FavorNews> list = DataSupport.where("news_id = ?", this.id).find(FavorNews.class);
                 if (list.size() == 0) {
-                    new FavorNews().setNewsId(this.id).save();
+                    new FavorNews().setNewsId(this.id)
+                            .setNews_content(this.text)
+                            .setNews_pictures(this.imageUrl)
+                            .setNews_title(this.title)
+                            .setNews_url(this.url).save();
                     Toast.makeText(this, "favorite", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -159,11 +163,10 @@ public class ContentActivity extends AppCompatActivity implements ContentContrac
                 break;
             case R.id.item_share:
                 showShare();
-                Toast.makeText(this, "share被选择了", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.item_speak:
                 startTTS();
-                Toast.makeText(this, "speak被选择了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sysnthesizing...", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
